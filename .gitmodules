@@ -1,6 +1,3 @@
-[submodule "CPCDevKit/tools/abasm"]
-	path = CPCDevKit/tools/abasm
-	url = https://github.com/fragarco/abasm.git
 [submodule "Dev8bp/tools/abasm"]
 	path = Dev8bp/tools/abasm
 	url = https://github.com/fragarco/abasm.git
