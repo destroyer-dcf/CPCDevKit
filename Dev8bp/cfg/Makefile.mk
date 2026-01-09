@@ -6,12 +6,11 @@
 # Ruta al directorio ASM (requerido)
 8BP_ASM_PATH ?= ./8BP_V43/ASM
 
-# Versión de ABASM
+# Versión de ABASM (informativa)
 ABASM_VERSION ?= 1.4.0
 
-# Ruta a abasm.py (se construye automáticamente con la versión)
-# Formato: CPCDevKit/tools/abasm/src/abasm_vX.X.X.py
-ABASM_PATH ?= $(CURDIR)/CPCDevKit/tools/abasm/src/abasm.py
+# Ruta a abasm.py
+ABASM_PATH ?= $(CURDIR)/Dev8BP/tools/abasm/src/abasm.py
 
 # Nivel de compilación (0-4)
 BUILD_LEVEL ?= 0

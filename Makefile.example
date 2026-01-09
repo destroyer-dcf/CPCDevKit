@@ -5,7 +5,7 @@
 
 # Incluir el Makefile principal
 MAKEFILE_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
-include $(MAKEFILE_DIR)/CPCDevKit/cfg/Makefile.mk
+include $(MAKEFILE_DIR)/Dev8BP/cfg/Makefile.mk
 
 # Sobrescribir variables con valores específicos del proyecto
 # Descomenta y ajusta según tu proyecto:
