@@ -1,13 +1,29 @@
-# Makefile para BUILD8BP
-# =====================================================
-# Variables de configuración (se pueden sobrescribir)
-# =====================================================
+# ==============================================================================
+#  Dev8BP - Copyright (c) 2026 Destroyer
+# ==============================================================================
+# MIT License
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 
-# Ruta al directorio ASM (requerido)
-8BP_ASM_PATH ?= ./8BP_V43/ASM
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# ==============================================================================
 
-# Ruta a abasm.py
-ABASM_PATH ?= $(CURDIR)/Dev8bp/tools/abasm/src/abasm.py
+# Incluir rutas de herramientas
+include $(dir $(lastword $(MAKEFILE_LIST)))/tool_paths.mk
 
 # Nivel de compilación (0-4)
 BUILD_LEVEL ?= 0
@@ -30,16 +46,14 @@ CYAN := \033[0;36m
 RED := \033[0;31m
 NC := \033[0m # No Color
 
-# =====================================================
-# Targets principales
-# =====================================================
+#TARGETS PRINCIPALES
 
-.PHONY: all help compile clean info build-all
+.PHONY: all help compile clean info build-all dsk
 
-# Target por defecto
+# TARGET POR DEFECTO
 all: info compile
 
-# Mostrar ayuda
+# MOSTRAR AYUDA
 help:
 	@echo ""
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
@@ -55,6 +69,7 @@ help:
 	@echo "  all         - Mostrar info + compilar nivel 0 (por defecto)"
 	@echo "  build-all   - Compilar todos los niveles (0-4)"
 	@echo "  8bp0-8bp4   - Compilar nivel específico (ej: make 8bp2)"
+	@echo "  dsk         - Crear imagen DSK con iDSK20"
 	@echo "  clean       - Limpiar archivos temporales y dist"
 	@echo ""
 	@echo "$(CYAN)Variables:$(NC)"
@@ -76,7 +91,7 @@ help:
 	@echo "  4 = Sin scroll/layout +500 bytes (MEMORY 25500)"
 	@echo ""
 
-# Mostrar información de configuración
+# INFORMACION DE CONFIGURACION
 info:
 	@echo ""
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
@@ -85,6 +100,7 @@ info:
 	@echo ""
 	@echo "$(CYAN)Directorio ASM:$(NC)     $(8BP_ASM_PATH)"
 	@echo "$(CYAN)ABASM:$(NC)              $(ABASM_PATH)"
+	@echo "$(CYAN)iDSK:$(NC)               $(IDSK_PATH)"
 	@echo "$(CYAN)Nivel de build:$(NC)     $(BUILD_LEVEL)"
 	@echo "$(CYAN)Directorio salida:$(NC)  $(DIST_DIR)"
 	@echo "$(CYAN)Python:$(NC)             $(PYTHON)"
@@ -203,7 +219,7 @@ compile: $(DIST_DIR)
 		fi \
 	fi
 
-# Compilar todos los niveles
+# COMPILAR TODOS LOS NIVELES DE 8BP
 build-all: $(DIST_DIR)
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
 	@echo "$(BLUE)  Compilando todos los niveles$(NC)"
@@ -220,11 +236,11 @@ build-all: $(DIST_DIR)
 	@ls -lh $(DIST_DIR)/8BP*.bin 2>/dev/null || echo "  No se encontraron binarios"
 	@echo ""
 
-# Crear directorio dist
+# CREACION DIRECTORIO DIST
 $(DIST_DIR):
 	@mkdir -p $(DIST_DIR)
 
-# Limpiar archivos temporales
+# LIMPIAR ARCHIVOS TEMPORALES
 clean:
 	@echo "\n$(YELLOW)Limpiando archivos temporales...$(NC)"
 	@rm -f "$(8BP_ASM_PATH)"/*.backup
@@ -236,9 +252,25 @@ clean:
 	@rm -rf $(DIST_DIR)
 	@echo "$(GREEN)✓ Limpieza completada (incluye $(DIST_DIR))$(NC)\n"
 
-# =====================================================
-# Targets específicos por nivel (alias para compilar)
-# =====================================================
+# CREAR IMAGEN DSK
+dsk:
+	@echo ""
+	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
+	@echo "$(BLUE)  8BP - Crear imagen DSK$(NC)"
+	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
+	@echo ""
+	@echo "$(CYAN)iDSK:$(NC)               $(IDSK_PATH)"
+	@echo "$(CYAN)Plataforma:$(NC)         $(IDSK_PLATFORM)"
+	@echo ""
+	@if [ ! -f "$(IDSK_PATH)" ]; then \
+		echo "$(RED)Error: iDSK no encontrado en $(IDSK_PATH)$(NC)"; \
+		exit 1; \
+	fi
+	@echo "$(YELLOW)Ejecutando iDSK20...$(NC)"
+	@"$(IDSK_PATH)"
+	@echo ""
+
+# TARGETS ESPECIFICOS POR NIVEL DE COMPILACION
 
 .PHONY: 8bp0 8bp1 8bp2 8bp3 8bp4
 
@@ -257,14 +289,12 @@ clean:
 8bp4:
 	@$(MAKE) compile BUILD_LEVEL=4 --no-print-directory
 
-# =====================================================
-# Validaciones
-# =====================================================
+# VALIDACIONES
 
 .PHONY: check
 
 check:
-	@echo "$(CYAN)Verificando configuración...$(NC)"
+	@echo "\n$(CYAN)Verificando configuración...$(NC)"
 	@if [ ! -d "$(8BP_ASM_PATH)" ]; then \
 		echo "$(RED)Error: Directorio ASM no existe: $(8BP_ASM_PATH)$(NC)"; \
 		exit 1; \
@@ -277,16 +307,4 @@ check:
 		echo "$(RED)Error: Python no está instalado$(NC)"; \
 		exit 1; \
 	fi
-	@if [ ! -x "$(PATCH_SCRIPT)" ]; then \
-		echo "$(RED)Error: Script de patch no ejecutable: $(PATCH_SCRIPT)$(NC)"; \
-		exit 1; \
-	fi
-	@if [ ! -x "$(CONVERT_SCRIPT)" ]; then \
-		echo "$(RED)Error: Script de conversión no ejecutable: $(CONVERT_SCRIPT)$(NC)"; \
-		exit 1; \
-	fi
-	@if [ ! -x "$(COMPILE_SCRIPT)" ]; then \
-		echo "$(RED)Error: Script de compilación no ejecutable: $(COMPILE_SCRIPT)$(NC)"; \
-		exit 1; \
-	fi
-	@echo "$(GREEN)✓ Configuración válida$(NC)"
+	@echo "$(GREEN)✓ Configuración válida$(NC)\n"
