@@ -28,12 +28,9 @@
 # incluidas como submódulos en Dev8bp/tools/
 # =====================================================
 
-# Directorio base de Dev8bp (relativo a este archivo)
-DEV8BP_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))..
-
 # ABASM - Ensamblador Z80 para Amstrad CPC
-ABASM_PATH ?= $(DEV8BP_ROOT)/tools/abasm/src/abasm.py
+ABASM_PATH ?= $(DEV8BP_PATH)/tools/abasm/src/abasm.py
 
 # DSK.PY - Herramienta para crear y manipular imágenes DSK de Amstrad CPC
-DSK_PATH ?= $(DEV8BP_ROOT)/tools/abasm/src/dsk.py
+DSK_PATH ?= $(DEV8BP_PATH)/tools/abasm/src/dsk.py
 

@@ -43,11 +43,11 @@ define dsk-put-bin
 	fi; \
 	LOAD_ADDR=$(if $(3),$(3),0x4000); \
 	START_ADDR=$(if $(4),$(4),0x4000); \
-	cd "$(OBJ_DIR)" && $(PYTHON) "$(DSK_PATH)" "$(DIST_DIR)/$(1)" --put-bin "$(2)" --load-addr $$LOAD_ADDR --start-addr $$START_ADDR; \
+	cd "$(OBJ_DIR)" && $(PYTHON) "$(DSK_PATH)" "$(CURDIR)/$(DIST_DIR)/$(1)" --put-bin "$(2)" --load-addr $$LOAD_ADDR --start-addr $$START_ADDR; \
 	if [ $$? -eq 0 ]; then \
 		echo "$(GREEN)✓ Binario añadido correctamente$(NC)"; \
 		echo ""; \
-		$(PYTHON) "$(DSK_PATH)" "$(DIST_DIR)/$(1)" --cat; \
+		$(PYTHON) "$(DSK_PATH)" "$(CURDIR)/$(DIST_DIR)/$(1)" --cat; \
 		echo ""; \
 	else \
 		echo "$(RED)✗ Error al añadir el binario$(NC)"; \
@@ -71,11 +71,11 @@ define dsk-put-raw
 		echo "$(RED)✗ Error: El archivo $(2) no existe en $(OBJ_DIR)$(NC)"; \
 		exit 1; \
 	fi; \
-	cd "$(OBJ_DIR)" && $(PYTHON) "$(DSK_PATH)" "$(DIST_DIR)/$(1)" --put-raw "$(2)"; \
+	cd "$(OBJ_DIR)" && $(PYTHON) "$(DSK_PATH)" "$(CURDIR)/$(DIST_DIR)/$(1)" --put-raw "$(2)"; \
 	if [ $$? -eq 0 ]; then \
 		echo "$(GREEN)✓ Archivo raw añadido correctamente$(NC)"; \
 		echo ""; \
-		$(PYTHON) "$(DSK_PATH)" "$(DIST_DIR)/$(1)" --cat; \
+		$(PYTHON) "$(DSK_PATH)" "$(CURDIR)/$(DIST_DIR)/$(1)" --cat; \
 		echo ""; \
 	else \
 		echo "$(RED)✗ Error al añadir el archivo raw$(NC)"; \
@@ -99,11 +99,11 @@ define dsk-put-ascii
 		echo "$(RED)✗ Error: El archivo $(2) no existe en $(OBJ_DIR)$(NC)"; \
 		exit 1; \
 	fi; \
-	cd "$(OBJ_DIR)" && $(PYTHON) "$(DSK_PATH)" "$(DIST_DIR)/$(1)" --put-ascii "$(2)"; \
+	cd "$(OBJ_DIR)" && $(PYTHON) "$(DSK_PATH)" "$(CURDIR)/$(DIST_DIR)/$(1)" --put-ascii "$(2)"; \
 	if [ $$? -eq 0 ]; then \
 		echo "$(GREEN)✓ Archivo ASCII añadido correctamente$(NC)"; \
 		echo ""; \
-		$(PYTHON) "$(DSK_PATH)" "$(DIST_DIR)/$(1)" --cat; \
+		$(PYTHON) "$(DSK_PATH)" "$(CURDIR)/$(DIST_DIR)/$(1)" --cat; \
 		echo ""; \
 	else \
 		echo "$(RED)✗ Error al añadir el archivo ASCII$(NC)"; \

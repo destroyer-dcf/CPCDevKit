@@ -22,11 +22,16 @@
 # SOFTWARE.
 # ==============================================================================
 
+# Verificar que DEV8BP_PATH está definida
+ifndef DEV8BP_PATH
+$(error DEV8BP_PATH no está definida. Ejecuta setup.sh en el directorio raíz de Dev8BP)
+endif
+
 # Incluir rutas de herramientas
-include $(dir $(lastword $(MAKEFILE_LIST)))/tool_paths.mk
+include $(DEV8BP_PATH)/cfg/tool_paths.mk
 
 # Incluir funciones reutilizables
-include $(dir $(lastword $(MAKEFILE_LIST)))/functions.mk
+include $(DEV8BP_PATH)/cfg/functions.mk
 
 # Ruta al directorio ASM (requerido)
 8BP_ASM_PATH ?= ./8BP_V43/ASM
@@ -35,17 +40,17 @@ include $(dir $(lastword $(MAKEFILE_LIST)))/functions.mk
 BUILD_LEVEL ?= 0
 
 # Directorio de objetos compilados (binarios, lst, map)
-OBJ_DIR := ./obj
+OBJ_DIR := obj
 
 # Directorio de salida para DSK
-DIST_DIR := ./dist
+DIST_DIR := dist
 
 # Intérprete de Python
 PYTHON := $(shell command -v python3 2> /dev/null || command -v python)
 
-# Scripts
-PATCH_SCRIPT := $(CURDIR)/Dev8bp/scripts/patch_asm.sh
-CONVERT_SCRIPT := $(CURDIR)/Dev8bp/scripts/convert_to_utf8.sh
+# Scripts (desde DEV8BP_PATH)
+PATCH_SCRIPT := $(DEV8BP_PATH)/scripts/patch_asm.sh
+CONVERT_SCRIPT := $(DEV8BP_PATH)/scripts/convert_to_utf8.sh
 
 # Colores para output
 GREEN := \033[0;32m
@@ -111,7 +116,7 @@ help:
 info:
 	@echo ""
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
-	@echo "$(BLUE)  8BP - Configuración$(NC)"
+	@echo "$(BLUE)  ⚙️ Dev8BP - Configuración$(NC)"
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
 	@echo ""
 	@echo "$(CYAN)Directorio ASM:$(NC)     $(8BP_ASM_PATH)"
@@ -127,7 +132,7 @@ info:
 _compile: $(OBJ_DIR) $(DIST_DIR)
 	@echo "$(YELLOW)\nCompilando nivel $(BUILD_LEVEL)...$(NC)\n"
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
-	@echo "$(BLUE)  8BP - Build $(BUILD_LEVEL)$(NC)"
+	@echo "$(BLUE)  ▶️ 8BP - Build $(BUILD_LEVEL)$(NC)"
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
 	@echo ""
 	@# Información del build
@@ -189,14 +194,15 @@ _compile: $(OBJ_DIR) $(DIST_DIR)
 	@echo "$(CYAN)Archivo a compilar:$(NC)  make_all_mygame.asm"
 	@echo "$(CYAN)Carpeta obj:$(NC)         $(OBJ_DIR)"
 	@echo "\n$(YELLOW)Compilando con ABASM...$(NC)\n"
-	@# Compilar con ABASM
-	@cd "$(8BP_ASM_PATH)" && $(PYTHON) "$(ABASM_PATH)" "make_all_mygame.asm" --tolerance 2 && \
+	@# Compilar con ABASM - Guardar directorio del proyecto antes de cambiar
+	@PROJECT_ROOT="$(CURDIR)"; \
+	cd "$(8BP_ASM_PATH)" && $(PYTHON) "$(ABASM_PATH)" "make_all_mygame.asm" --tolerance 2 && \
 	if [ -f "8BP$(BUILD_LEVEL).bin" ]; then \
-		mv "8BP$(BUILD_LEVEL).bin" "$(OBJ_DIR)/"; \
-		if [ -f "make_all_mygame.bin" ]; then mv "make_all_mygame.bin" "$(OBJ_DIR)/"; fi; \
+		mv "8BP$(BUILD_LEVEL).bin" "$$PROJECT_ROOT/$(OBJ_DIR)/"; \
+		if [ -f "make_all_mygame.bin" ]; then mv "make_all_mygame.bin" "$$PROJECT_ROOT/$(OBJ_DIR)/"; fi; \
 		for ext in lst map; do \
 			for file in *.$$ext; do \
-				if [ -f "$$file" ]; then mv "$$file" "$(OBJ_DIR)/" 2>/dev/null || true; fi; \
+				if [ -f "$$file" ]; then mv "$$file" "$$PROJECT_ROOT/$(OBJ_DIR)/" 2>/dev/null || true; fi; \
 			done; \
 		done; \
 		rm -f *.bin; \
@@ -255,7 +261,7 @@ clean:
 dsk: $(DIST_DIR)
 	@echo ""
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
-	@echo "$(BLUE)  8BP - Crear imagen DSK$(NC)"
+	@echo "$(BLUE)  💾 Crear imagen DSK$(NC)"
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
 	@echo ""
 	@echo "$(CYAN)Nombre DSK:$(NC)         $(DSK)"

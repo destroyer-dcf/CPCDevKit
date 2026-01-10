@@ -24,26 +24,37 @@
 
 # Copia este archivo como "Makefile" en tu proyecto y ajusta las variables
 
-# Incluir el Makefile principal
-MAKEFILE_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
-include $(MAKEFILE_DIR)/Dev8bp/cfg/Makefile.mk
+# Verificar que DEV8BP_PATH está definida
+ifndef DEV8BP_PATH
+$(error DEV8BP_PATH no está definida. Ejecuta setup.sh en el directorio raíz de Dev8BP o añade 'export DEV8BP_PATH=/ruta/a/Dev8bp' a tu .bashrc/.zshrc)
+endif
 
-# Incluir el Makefile principal
-MAKEFILE_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
-include $(MAKEFILE_DIR)/Dev8bp/cfg/Makefile.mk
-
-# Sobrescribir variables con valores específicos del proyecto
-# Descomenta y ajusta según tu proyecto:
+# ============================================
+# CONFIGURACIÓN DEL PROYECTO
+# ============================================
+# Ajusta estas variables según tu proyecto
 
 # Nombre del proyecto (usado para el DSK)
-# PROJECT_NAME := MI_JUEGO
+PROJECT_NAME := MI_JUEGO
 
 # Nivel de compilación (0-4)
-# BUILD_LEVEL := 0
+BUILD_LEVEL := 0
 
 # Ruta al directorio ASM del proyecto
-# 8BP_ASM_PATH := ./mi_proyecto/8BP_V43/ASM
+8BP_ASM_PATH := $(CURDIR)/ASM
 
-# Directorio de salida para los binarios compilados
-# DIST_DIR := ./mi_proyecto/dist
+# Directorio de objetos intermedios (bin, lst, map)
+OBJ_DIR := obj
 
+# Directorio de salida para DSK
+DIST_DIR := dist
+
+# Nombre de la imagen DSK
+DSK := $(PROJECT_NAME).dsk
+
+# ============================================
+# INCLUIR MAKEFILE PRINCIPAL
+# ============================================
+
+# Incluir el Makefile principal
+include $(DEV8BP_PATH)/cfg/Makefile.mk
