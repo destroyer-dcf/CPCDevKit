@@ -5151,7 +5151,7 @@ endif
 
 
 
-ifnot ASSEMBLING_OPTION  = 0 
+ifnot ASSEMBLING_OPTION = 0 
 _END_27000
 endif
 
@@ -9386,7 +9386,7 @@ _END_30450_partial	db 0 ; este deb 0 no es nada, se va a machacar con el siguien
 endif
 
 
-ifnot ASSEMBLING_OPTION  = 0 
+ifnot ASSEMBLING_OPTION = 0 
 _END_30450	db 0 ; este deb 0 no es nada, se va a machacar con el siguiente org
 endif		
 

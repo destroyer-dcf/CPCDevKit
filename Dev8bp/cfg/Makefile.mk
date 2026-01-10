@@ -25,6 +25,12 @@
 # Incluir rutas de herramientas
 include $(dir $(lastword $(MAKEFILE_LIST)))/tool_paths.mk
 
+# Incluir funciones reutilizables
+include $(dir $(lastword $(MAKEFILE_LIST)))/functions.mk
+
+# Ruta al directorio ASM (requerido)
+8BP_ASM_PATH ?= ./8BP_V43/ASM
+
 # Nivel de compilación (0-4)
 BUILD_LEVEL ?= 0
 
@@ -210,7 +216,8 @@ compile: $(DIST_DIR)
 	fi || (mv "$(8BP_ASM_PATH)/make_all_mygame.asm.backup_build" "$(8BP_ASM_PATH)/make_all_mygame.asm" 2>/dev/null; exit 1)
 	@# Verificar que el binario se generó correctamente
 	@if [ -f "$(DIST_DIR)/8BP$(BUILD_LEVEL).bin" ]; then \
-		echo "$(GREEN)✓ Build Successful!!\n"; \
+		echo "$(GREEN)✓ Build Successful!!$(NC)"; \
+		echo ""; \
 	else \
 		echo "$(YELLOW)⚠ Binario no encontrado en dist, buscando...$(NC)"; \
 		if [ -f "$(8BP_ASM_PATH)/8BP$(BUILD_LEVEL).bin" ]; then \
@@ -218,6 +225,8 @@ compile: $(DIST_DIR)
 			echo "$(GREEN)✓ Binario movido a: $(DIST_DIR)/8BP$(BUILD_LEVEL).bin$(NC)"; \
 		fi \
 	fi
+	@# Crear/actualizar DSK automáticamente
+	@$(MAKE) dsk --no-print-directory
 
 # COMPILAR TODOS LOS NIVELES DE 8BP
 build-all: $(DIST_DIR)
@@ -252,23 +261,6 @@ clean:
 	@rm -rf $(DIST_DIR)
 	@echo "$(GREEN)✓ Limpieza completada (incluye $(DIST_DIR))$(NC)\n"
 
-# CREAR IMAGEN DSK
-dsk:
-	@echo ""
-	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
-	@echo "$(BLUE)  8BP - Crear imagen DSK$(NC)"
-	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
-	@echo ""
-	@echo "$(CYAN)iDSK:$(NC)               $(IDSK_PATH)"
-	@echo "$(CYAN)Plataforma:$(NC)         $(IDSK_PLATFORM)"
-	@echo ""
-	@if [ ! -f "$(IDSK_PATH)" ]; then \
-		echo "$(RED)Error: iDSK no encontrado en $(IDSK_PATH)$(NC)"; \
-		exit 1; \
-	fi
-	@echo "$(YELLOW)Ejecutando iDSK20...$(NC)"
-	@"$(IDSK_PATH)"
-	@echo ""
 
 # TARGETS ESPECIFICOS POR NIVEL DE COMPILACION
 
@@ -308,3 +300,38 @@ check:
 		exit 1; \
 	fi
 	@echo "$(GREEN)✓ Configuración válida$(NC)\n"
+# CREAR IMAGEN DSK
+dsk: $(DIST_DIR)
+	@echo ""
+	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
+	@echo "$(BLUE)  8BP - Crear imagen DSK$(NC)"
+	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
+	@echo ""
+	@echo "$(CYAN)Nombre DSK:$(NC)         $(DSK)"
+	@echo "$(CYAN)iDSK:$(NC)               $(IDSK_PATH)"
+	@echo "$(CYAN)Plataforma:$(NC)         $(IDSK_PLATFORM)"
+	@echo ""
+	@if [ ! -f "$(IDSK_PATH)" ]; then \
+		echo "$(RED)Error: iDSK no encontrado en $(IDSK_PATH)$(NC)"; \
+		exit 1; \
+	fi
+	$(call create-dsk,$(DSK))
+	@echo ""
+	@if [ ! -f "$(DIST_DIR)/8BP$(BUILD_LEVEL).bin" ]; then \
+		echo "$(YELLOW)⚠ No se encontró 8BP$(BUILD_LEVEL).bin - compile primero$(NC)"; \
+		echo ""; \
+		exit 1; \
+	fi
+	@case $(BUILD_LEVEL) in \
+		0) LOAD_ADDR="5C30" ;; \
+		1) LOAD_ADDR="61A8" ;; \
+		2) LOAD_ADDR="60E0" ;; \
+		3) LOAD_ADDR="5DC0" ;; \
+		4) LOAD_ADDR="62D4" ;; \
+	esac; \
+	$(call add-file-to-dsk,$(DSK),8BP$(BUILD_LEVEL).bin,B,$$LOAD_ADDR,$$LOAD_ADDR)
+	@echo ""
+	@echo "$(CYAN)Catálogo del DSK:$(NC)"
+	@"$(IDSK_PATH)" cat "$(DIST_DIR)/$(DSK)"
+	@echo ""
+
