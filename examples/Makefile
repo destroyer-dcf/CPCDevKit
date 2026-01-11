@@ -42,6 +42,9 @@ ASM_PATH := ASM
 # Path archivos BASIC (se añadirán al DSK automáticamente)
 BASIC_PATH := bas
 
+# Path archivos RAW (se añadirán al DSK sin encabezado AMSDOS)
+RAW_PATH := raw
+
 # Path código C (se compilará con SDCC si existe)
 C_PATH := C
 C_SOURCE := ciclo.c

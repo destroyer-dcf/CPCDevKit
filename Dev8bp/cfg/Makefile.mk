@@ -33,16 +33,19 @@ include $(DEV8BP_PATH)/cfg/tool_paths.mk
 # Incluir funciones reutilizables
 include $(DEV8BP_PATH)/cfg/functions.mk
 
-# Ruta al directorio ASM (requerido)
-ASM_PATH ?= ./8BP_V43/ASM
+# Ruta al directorio ASM (requerido - debe estar definida en el Makefile del proyecto)
+# ASM_PATH ?= ./ASM
 
-# Ruta al directorio BASIC (archivos .bas que se añadirán al DSK)
-BASIC_PATH ?= ./bas
+# Ruta al directorio BASIC (archivos .bas que se añadirán al DSK) - opcional
+# BASIC_PATH ?= ./bas
 
-# Ruta al directorio C (archivos .c para compilar con SDCC)
-C_PATH ?= ./C
-C_SOURCE ?= ciclo.c
-C_CODE_LOC ?= 20000
+# Ruta al directorio RAW (archivos raw que se añadirán al DSK sin encabezado) - opcional
+# RAW_PATH ?= ./raw
+
+# Ruta al directorio C (archivos .c para compilar con SDCC) - opcional
+# C_PATH ?= ./C
+# C_SOURCE ?= ciclo.c
+# C_CODE_LOC ?= 20000
 
 # Configuración del emulador RetroVirtualMachine
 RVM_PATH ?= 
@@ -75,10 +78,15 @@ NC := \033[0m # No Color
 
 #TARGETS PRINCIPALES
 
-.PHONY: all help clean info dsk bas c run
+.PHONY: all help clean info dsk bas raw c run
 
 # TARGET POR DEFECTO - Compilar proyecto completo
-all: info _compile
+all: info
+ifdef ASM_PATH
+	@$(MAKE) _compile --no-print-directory
+else
+	@$(MAKE) dsk --no-print-directory
+endif
 
 # Crear directorios necesarios
 $(OBJ_DIR):
@@ -103,6 +111,7 @@ help:
 	@echo "  all         - Mostrar info + compilar + crear DSK (por defecto)"
 	@echo "  dsk         - Crear imagen DSK con binario compilado"
 	@echo "  bas         - Añadir archivos BASIC al DSK"
+	@echo "  raw         - Añadir archivos RAW al DSK (sin encabezado AMSDOS)"
 	@echo "  c           - Compilar código C con SDCC y añadir al DSK"
 	@echo "  run         - Ejecutar DSK en RetroVirtualMachine"
 	@echo "  clean       - Limpiar archivos temporales, obj y dist"
@@ -110,6 +119,7 @@ help:
 	@echo "$(CYAN)Variables:$(NC)"
 	@echo "  ASM_PATH      Ruta al directorio ASM (actual: $(ASM_PATH))"
 	@echo "  BASIC_PATH    Ruta al directorio BASIC (actual: $(BASIC_PATH))"
+	@echo "  RAW_PATH      Ruta al directorio RAW (actual: $(RAW_PATH))"
 	@echo "  BUILD_LEVEL   Nivel de compilación 0-4 (actual: $(BUILD_LEVEL))"
 	@echo "  ABASM_PATH    Ruta a abasm.py (actual: $(ABASM_PATH))"
 	@echo "  OBJ_DIR       Directorio de objetos (actual: $(OBJ_DIR))"
@@ -278,7 +288,7 @@ clean:
 	@echo "$(GREEN)✓ Limpieza completada (obj y dist eliminados)$(NC)\n"
 
 # CREAR IMAGEN DSK
-dsk: $(DIST_DIR)
+dsk: $(DIST_DIR) $(OBJ_DIR)
 	@echo ""
 	@echo "$(BLUE)═══════════════════════════════════════$(NC)"
 	@echo "$(BLUE)  💾 Crear imagen DSK$(NC)"
@@ -293,6 +303,7 @@ dsk: $(DIST_DIR)
 	fi
 	@$(call create-dsk,$(DSK))
 	@echo ""
+ifdef ASM_PATH
 	@if [ ! -f "$(OBJ_DIR)/8BP$(BUILD_LEVEL).bin" ]; then \
 		echo "$(YELLOW)⚠ No se encontró 8BP$(BUILD_LEVEL).bin en $(OBJ_DIR) - ejecuta make primero$(NC)"; \
 		echo ""; \
@@ -306,17 +317,22 @@ dsk: $(DIST_DIR)
 		4) LOAD_ADDR="0x62D4" ;; \
 	esac; \
 	$(call dsk-put-bin,$(DSK),8BP$(BUILD_LEVEL).bin,$$LOAD_ADDR,$$LOAD_ADDR)
+endif
+ifdef BASIC_PATH
 	@$(MAKE) bas --no-print-directory
+endif
+ifdef RAW_PATH
+	@$(MAKE) raw --no-print-directory
+endif
+ifdef C_PATH
 	@if [ -d "$(C_PATH)" ]; then \
 		$(MAKE) c --no-print-directory; \
 	fi
+endif
 	@echo "$(YELLOW)Nota:$(NC) Los archivos >16KB se dividen en múltiples extents (extensiones)"
 	@echo "       Cada extent puede contener hasta 128 páginas de datos (16KB)"
 	@echo ""
 
-
-# AÑADIR ARCHIVOS BASIC AL DSK
-bas:
 
 # AÑADIR ARCHIVOS BASIC AL DSK
 bas:
@@ -342,6 +358,30 @@ bas:
 		echo "$(YELLOW)⚠ No se encontraron archivos .bas en $(BASIC_PATH)$(NC)"; \
 	else \
 		echo "$(GREEN)✓ $$BASIC_COUNT archivo(s) BASIC añadido(s)$(NC)"; \
+	fi
+	@echo ""
+
+# AÑADIR ARCHIVOS RAW AL DSK
+raw:
+	@if [ ! -d "$(RAW_PATH)" ]; then \
+		echo "$(YELLOW)⚠ No existe la carpeta $(RAW_PATH)$(NC)"; \
+		exit 0; \
+	fi
+	@echo ""
+	@echo "$(CYAN)Añadiendo archivos RAW desde:$(NC) $(RAW_PATH)"
+	@RAW_COUNT=0; \
+	for file in "$(RAW_PATH)"/*; do \
+		if [ -f "$$file" ]; then \
+			BASENAME=$$(basename "$$file"); \
+			cp "$$file" "$(CURDIR)/$(OBJ_DIR)/$$BASENAME"; \
+			$(call dsk-put-raw,$(DSK),$$BASENAME) && \
+			RAW_COUNT=$$((RAW_COUNT + 1)); \
+		fi; \
+	done; \
+	if [ $$RAW_COUNT -eq 0 ]; then \
+		echo "$(YELLOW)⚠ No se encontraron archivos en $(RAW_PATH)$(NC)"; \
+	else \
+		echo "$(GREEN)✓ $$RAW_COUNT archivo(s) RAW añadido(s)$(NC)"; \
 	fi
 	@echo ""
 
@@ -432,11 +472,6 @@ c:
 	echo "$(CYAN)═══════════════════════════════════════$(NC)"; \
 	grep -E "(Lowest address|Highest address|_main)" "$(OBJ_DIR)/$$BASENAME.map" || true; \
 	echo ""; \
-	echo "$(CYAN)Uso desde BASIC:$(NC)"; \
-	echo "  1) Carga o ensambla 8BP con tus gráficos, música, etc."; \
-	echo "  2) Carga tu juego BASIC"; \
-	echo "  3) LOAD \"$$BASENAME.BIN\", $(C_CODE_LOC)"; \
-	echo "  4) CALL <dirección de _main del .map>"; \
 	echo ""
 
 # EJECUTAR EN RETROVIRTUALMACHINE

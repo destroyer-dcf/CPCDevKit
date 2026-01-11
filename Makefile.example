@@ -46,6 +46,9 @@ ASM_PATH := $(CURDIR)/ASM
 # Ruta al directorio BASIC (archivos .bas que se añadirán al DSK)
 BASIC_PATH := $(CURDIR)/bas
 
+# Ruta al directorio RAW (archivos raw que se añadirán al DSK sin encabezado)
+RAW_PATH := $(CURDIR)/raw
+
 # Ruta al directorio C (código C con SDCC - opcional)
 C_PATH := $(CURDIR)/C
 C_SOURCE := ciclo.c
