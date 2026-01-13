@@ -1,0 +1,22 @@
+# Archivos generados
+obj/
+dist/
+*.bin
+*.lst
+*.map
+*.ihx
+*.lk
+*.noi
+*.rel
+*.sym
+*.asm
+
+# Backups
+*.backup
+*.backup_build
+*.bak
+*.BAK
+
+# Sistema
+.DS_Store
+Thumbs.db
