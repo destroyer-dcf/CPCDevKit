@@ -7,8 +7,6 @@
 [![Amstrad CPC](https://img.shields.io/badge/Amstrad-CPC-red.svg)]()
 [![8BP](https://img.shields.io/badge/8BP-v0.43-purple.svg)](https://github.com/jjaranda13/8BP)
 
-Sistema de compilación moderno basado en scripts bash para [8BP](https://github.com/jjaranda13/8BP). **Más simple, más amigable, más potente que Makefiles.**
-
 ---
 
 ## 🎯 ¿Por qué Dev8BP CLI?
