@@ -19,6 +19,15 @@ Esta idea nace de la necesidad de poder compilar la librería [8BP](https://gith
 
 ## � ¿Qué incluye?
 
+### Compilación automatizada
+- ✅ **8BP** - Librería de programación para Amstrad CPC
+- ✅ **ASM** - Código ensamblador 8BP (make_all_*.asm)
+- ✅ **BASIC** - Archivos BASIC (se añaden al DSK)
+- ✅ **RAW** - Archivos binarios sin encabezado AMSDOS
+- ✅ **C** - Código C compilado con SDCC
+- ✅ **8BP0.BIN** - Archivo binario de 8BP (make_all_*.bin)
+- ✅ **MI_JUEGO.DSK** - Generacion de DSK
+
 ### Herramientas integradas
 - ✅ **ABASM** - Ensamblador para Z80
 - ✅ **dsk.py** - Gestión de imágenes DSK
@@ -28,6 +37,25 @@ Esta idea nace de la necesidad de poder compilar la librería [8BP](https://gith
 - ✅ macOS (ARM64 y x86_64)
 - ✅ Linux (ARM64 y x86_64)
 - ✅ Windows (WSL o Git Bash)
+
+## 📦 Requisitos
+- **Python 3.x** (para scripts)
+- **ABASM** (ensamblador Z80) - instalado automáticamente
+- **SDCC** (compilador C) - opcional, solo si usas C
+- **RetroVirtualMachine** - opcional, solo si usas `dev8bp run`
+
+### Roadmap
+- [🚧] Mejoras en la validación de proyectos
+- [🚧] Soporte para más tipos de archivos
+- [🚧] Integración con GitHub Actions
+- [🚧] Plantillas de proyectos preconfigurados
+- [🚧] Soporte para otros ensambladores
+- [🚧] Mejoras en la documentación
+- [🚧] Comandos adicionales (deploy, test)
+10. 🚧 En desarrollo: Conversion de imagenes a asm 
+11. 🚧 En desarrollo: Muestra información de compilación
+12. 🚧 En desarrollo: Pruebas sobre M4Board
+
 
 ---
 
@@ -141,9 +169,6 @@ dev8bp build
 7. ✅ Compila código C con SDCC (si `C_PATH` está definido)
 8. ✅ Verifica límites de memoria C (< 23999)
 9. ✅ Muestra catálogo del DSK
-10. 🚧 En desarrollo: Conversion de imagenes a asm 
-11. 🚧 En desarrollo: Muestra información de compilación
-12. 🚧 En desarrollo: Pruebas sobre M4Board
 
 
 **Ejemplo de salida:**
