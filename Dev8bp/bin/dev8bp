@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Dev8BP CLI - Sistema de compilación para 8BP
+# Copyright (c) 2026 Destroyer
+# ==============================================================================
+
+# Detectar directorio de instalación
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Si DEV8BP_PATH no está definida, usar el directorio padre del script
+if [[ -z "$DEV8BP_PATH" ]]; then
+    export DEV8BP_PATH="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
+
+export DEV8BP_CLI_ROOT="$DEV8BP_PATH"
+DEV8BP_LIB="$DEV8BP_PATH/lib"
+
+# Cargar librerías
+source "$DEV8BP_LIB/colors.sh"
+source "$DEV8BP_LIB/utils.sh"
+source "$DEV8BP_LIB/config.sh"
+
+# Versión
+VERSION=$(get_version)
+
+# Función de ayuda principal
+show_help() {
+    echo ""
+    show_logo
+    echo -e "${BLUE}═════════════════════════════════════════════════${NC}"
+    echo -e "${BLUE}  Dev8BP CLI v$VERSION${NC}"
+    echo -e "${BLUE}  © Destroyer 2026${NC}"
+    echo -e "${BLUE}═════════════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "${CYAN}Sistema de compilación para 8BP${NC}"
+    echo ""
+    echo -e "${YELLOW}Uso:${NC}"
+    echo "  dev8bp <comando> [opciones]"
+    echo ""
+    echo -e "${YELLOW}Comandos disponibles:${NC}"
+    echo -e "  ${GREEN}new${NC} <nombre>      Crear nuevo proyecto"
+    echo -e "  ${GREEN}build${NC}             Compilar proyecto actual"
+    echo -e "  ${GREEN}clean${NC}             Limpiar archivos generados"
+    echo -e "  ${GREEN}run${NC}               Ejecutar en emulador"
+    echo -e "  ${GREEN}info${NC}              Mostrar configuración"
+    echo -e "  ${GREEN}validate${NC}          Validar proyecto"
+    echo -e "  ${GREEN}help${NC} [comando]    Mostrar ayuda"
+    echo -e "  ${GREEN}version${NC}           Mostrar versión"
+    echo ""
+    echo -e "${YELLOW}Ejemplos:${NC}"
+    echo "  dev8bp new mi-juego       # Crear nuevo proyecto"
+    echo "  dev8bp build              # Compilar"
+    echo "  dev8bp run                # Ejecutar en emulador"
+    echo ""
+    echo -e "${CYAN}Documentación:${NC} https://github.com/destroyer-dcf/Dev8BP"
+    echo ""
+}
+
+# Función de versión
+show_version() {
+    echo -e "\nDev8BP CLI v$VERSION\n"
+}
+
+# Comando principal
+main() {
+    local command="${1:-help}"
+    shift || true
+
+    case "$command" in
+        new)
+            source "$DEV8BP_LIB/new_project.sh"
+            new_project "$@"
+            ;;
+        build)
+            source "$DEV8BP_LIB/build.sh"
+            build_project "$@"
+            ;;
+        clean)
+            source "$DEV8BP_LIB/clean.sh"
+            clean_project "$@"
+            ;;
+        run)
+            source "$DEV8BP_LIB/run.sh"
+            run_project "$@"
+            ;;
+        info)
+            show_project_info "$@"
+            ;;
+        validate)
+            source "$DEV8BP_LIB/validate.sh"
+            validate_project "$@"
+            ;;
+        version)
+            show_version
+            ;;
+        help|--help|-h)
+            show_help
+            ;;
+        *)
+            echo -e "${RED}Error: Comando desconocido '$command'${NC}"
+            echo ""
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+# Ejecutar
+main "$@"

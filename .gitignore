@@ -4,73 +4,56 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-*.manifest
-*.spec
-pip-log.txt
-pip-delete-this-directory.txt
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.pytest_cache/
-.mypy_cache/
-.dmypy.json
-dmypy.json
-.pyre/
-.pytype/
+.venv/
 venv/
 env/
 ENV/
 env.bak/
 venv.bak/
+
+# Dev8BP - Archivos generados
+obj/
 dist/
-# Bash
-*.swp
-*.swo
-*~
-.bash_history
+*.bin
+*.lst
+*.map
+*.ihx
+*.lk
+*.noi
+*.rel
+*.sym
+
+# Dev8BP - Backups
+*.backup
+*.backup_build
+*.bak
+*.BAK
+*.encoding_backup
+
+# Dev8BP - Temporal
+tmp/
+temp/
 
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-Icon
 ._*
-.DocumentRevisions-V100
-.fseventsd
 .Spotlight-V100
-.TemporaryItems
 .Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-NOTAS.TXT
+Thumbs.db
 
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Archivos antiguos (Make - ya no se usan)
+Makefile.example
+Dev8bp/cfg/
+Dev8bp/scripts/
