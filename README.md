@@ -141,7 +141,10 @@ dev8bp build
 7. ✅ Compila código C con SDCC (si `C_PATH` está definido)
 8. ✅ Verifica límites de memoria C (< 23999)
 9. ✅ Muestra catálogo del DSK
-10. ✅ Muestra resumen e instrucciones de uso
+10. 🚧 En desarrollo: Conversion de imagenes a asm 
+11. 🚧 En desarrollo: Muestra información de compilación
+12. 🚧 En desarrollo: Pruebas sobre M4Board
+
 
 **Ejemplo de salida:**
 ```
