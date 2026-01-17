@@ -58,3 +58,5 @@ Makefile.example
 Dev8bp/cfg/
 Dev8bp/scripts/
 NOTAS.TXT
+docs/images/demo.yml
+docs/images/readme.md
