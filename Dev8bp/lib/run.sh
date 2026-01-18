@@ -60,9 +60,11 @@ run_project() {
     fi
     
     if [[ "$(detect_os)" == "macos" ]]; then
-        open -a "$RVM_PATH" --args "${cmd_args[@]}" &
+        open -a "$RVM_PATH" --args "${cmd_args[@]}" > /dev/null 2>&1 &
+        disown
     else
-        "$RVM_PATH" "${cmd_args[@]}" &
+        nohup "$RVM_PATH" "${cmd_args[@]}" > /dev/null 2>&1 &
+        disown
     fi
     
     sleep 1
