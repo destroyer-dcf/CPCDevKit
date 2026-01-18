@@ -7,18 +7,17 @@
 [![Amstrad CPC](https://img.shields.io/badge/Amstrad-CPC-red.svg)]()
 [![8BP](https://img.shields.io/badge/8BP-v0.43-purple.svg)](https://github.com/jjaranda13/8BP)
 
+<p align="center">
+  <img src="docs/images/help.png" alt="Dev8BP Help" width="800"/>
+</p>
+
 ---
 
 
 
 ## 🎯 ¿Por qué Dev8BP CLI?
 
-Esta idea nace de la necesidad de poder compilar la librería [8BP](https://github.com/jjaranda13/8BP) para Amstrad CPC en sistemas operativos que no fueran Windows de forma nativa. Gracias al ensamblador [ABASM](https://github.com/fragarco/abasm) creado por [fragarco](https://github.com/fragarco) todo esto ha sido posible. En este proyecto se encuentran las herramientas necesarias para poder realizar todo esto.
-
-<p align="center">
-  <img src="docs/images/help.png" alt="Dev8BP Help" width="800"/>
-</p>
-
+Esta idea nace de la necesidad de poder compilar la librería [8BP](https://github.com/jjaranda13/8BP) para Amstrad CPC en sistemas operativos que no fueran Windows de forma nativa. Gracias al ensamblador [ABASM](https://github.com/fragarco/abasm) creado por [fragarco](https://github.com/fragarco) todo esto ha sido posible.
 
 ---
 
@@ -74,10 +73,14 @@ Si decides utilizar la conversion de imagenes a ASM necesitaras instalar la libr
 - 🚧 Creacion de imagenes de cinta CDT
 - 🚧 Soporte para pruebas en M4Board
 - 🚧 Soporte para proyectos asm (No 8BP)
-- 🚧 Compilacion bas a binarios con abasc
+- 🚧 Compilacion bas con abasc
 
 
 ## 🚀 Como Empezar
+
+<p align="center">
+  <img src="docs/images/demo1.gif" alt="Dev8BP Demo" width="100%"/>
+</p>
 
 ### 1. Instalación
 
@@ -329,8 +332,6 @@ Muestra ayuda general.
 ```bash
 dev8bp help
 ```
-
-
 
 ---
 
