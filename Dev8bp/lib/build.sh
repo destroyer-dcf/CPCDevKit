@@ -16,9 +16,23 @@ build_project() {
     source "$DEV8BP_LIB/compile_c.sh"
     source "$DEV8BP_LIB/dsk.sh"
     source "$DEV8BP_LIB/graphics.sh"
+    source "$DEV8BP_LIB/screens.sh"
     
     header "Compilar Proyecto: $PROJECT_NAME"
     
+    # Detectar sistema operativo
+    local os_name=""
+    case "$(detect_os)" in
+        macos)   os_name="macOS" ;;
+        linux)   os_name="Linux" ;;
+        windows) os_name="Windows" ;;
+        *)       os_name="Unknown" ;;
+    esac
+    
+    # Detectar arquitectura
+    local arch_name=$(detect_arch)
+    
+    info "Sistema: $os_name ($arch_name)"
     info "Build Level: $BUILD_LEVEL ($(get_level_description $BUILD_LEVEL))"
     info "Memoria BASIC: MEMORY $(get_memory_for_level $BUILD_LEVEL)"
     echo ""
@@ -39,6 +53,19 @@ build_project() {
     # Si hubo errores en conversión de sprites, no continuar
     if [[ $has_errors -eq 1 ]]; then
         error "Conversión de sprites fallida"
+        exit 1
+    fi
+    
+    # 1.5. Convertir pantallas de carga PNG a SCN si está configurado
+    if [[ -n "$LOADER_SCREEN" ]]; then
+        if ! convert_screens; then
+            has_errors=1
+        fi
+    fi
+    
+    # Si hubo errores en conversión de pantallas, no continuar
+    if [[ $has_errors -eq 1 ]]; then
+        error "Conversión de pantallas fallida"
         exit 1
     fi
     
@@ -77,6 +104,14 @@ build_project() {
             exit 1
         fi
         echo ""
+    fi
+    
+    # 4.5. Añadir pantallas de carga al DSK si existen
+    if [[ -n "$LOADER_SCREEN" ]]; then
+        if ! add_screens_to_dsk; then
+            error "Error al añadir pantallas al DSK"
+            exit 1
+        fi
     fi
     
     # 5. Compilar C si está configurado

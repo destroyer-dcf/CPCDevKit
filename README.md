@@ -36,7 +36,8 @@ Esta idea nace de la necesidad de poder compilar la librería [8BP](https://gith
 - ✅ **[ABASM](https://github.com/fragarco/abasm)** - Ensamblador para Z80
 - ✅ **[dsk.py](https://github.com/fragarco/abasm)** - Gestión de imágenes DSK
 - ✅ **hex2bin** - Conversión para código C (multiplataforma)
-- ✅ **[png2asm.py](https://github.com/javy-fernandez/8bp-graphics-converter)** - Conversión automática de PNG a ASM
+- ✅ **[png2asm.py](https://github.com/javy-fernandez/8bp-graphics-converter)** - Conversión automática de PNG a ASM (sprites)
+- ✅ **[img.py](https://github.com/fragarco/abasm)** - Conversión automática de PNG a SCN (pantallas)
 
 ### Herramientas Opcionales
 
@@ -69,7 +70,8 @@ Si decides utilizar la conversion de imagenes a ASM necesitaras instalar la libr
 
 
 ### 📌 Roadmap
-- ✅ Conversion de imagenes a asm 
+- ✅ Conversion de imagenes a asm (sprites)
+- ✅ Conversion de imagenes a scn (pantallas de carga)
 - 🚧 Creacion de imagenes de cinta CDT
 - 🚧 Soporte para pruebas en M4Board
 - 🚧 Soporte para proyectos asm (No 8BP)
@@ -166,7 +168,7 @@ dev8bp new mi-super-juego
 ```
 
 **Crea:**
-- Directorios: `ASM/`, `bas/`, `obj/`, `dist/`, `assets/sprites/`, `assets/screens/`
+- Directorios: `ASM/`, `bas/`, `obj/`, `dist/`, `assets/sprites/`, `assets/screen/`
 - Archivo de configuración: `dev8bp.conf`
 - `README.md` con instrucciones
 - `.gitignore` configurado
@@ -182,15 +184,17 @@ dev8bp build
 
 **Proceso:**
 1. ✅ Convierte sprites PNG a ASM (si `SPRITES_PATH` está definido)
-2. ✅ Compila código ASM con ABASM (si `BP_ASM_PATH` está definido)
-3. ✅ Verifica límites de gráficos (`_END_GRAPH < 42040`)
-4. ✅ Crea imagen DSK
-5. ✅ Añade binario ASM al DSK (8BP0.bin, 8BP1.bin, etc.)
-6. ✅ Añade archivos BASIC al DSK (si `BASIC_PATH` está definido)
-7. ✅ Añade archivos RAW al DSK (si `RAW_PATH` está definido)
-8. ✅ Compila código C con SDCC (si `C_PATH` está definido)
-9. ✅ Verifica límites de memoria C (< 23999)
-10. ✅ Muestra catálogo del DSK
+2. ✅ Convierte pantallas PNG a SCN (si `LOADER_SCREEN` está definido)
+3. ✅ Compila código ASM con ABASM (si `BP_ASM_PATH` está definido)
+4. ✅ Verifica límites de gráficos (`_END_GRAPH < 42040`)
+5. ✅ Crea imagen DSK
+6. ✅ Añade binario ASM al DSK (8BP0.bin, 8BP1.bin, etc.)
+7. ✅ Añade pantallas SCN al DSK (si `LOADER_SCREEN` está definido)
+8. ✅ Añade archivos BASIC al DSK (si `BASIC_PATH` está definido)
+9. ✅ Añade archivos RAW al DSK (si `RAW_PATH` está definido)
+10. ✅ Compila código C con SDCC (si `C_PATH` está definido)
+11. ✅ Verifica límites de memoria C (< 23999)
+12. ✅ Muestra catálogo del DSK
 
 
 **Ejemplo de salida:**
@@ -382,10 +386,17 @@ RAW_PATH="raw"
 C_PATH="C"
 C_SOURCE="main.c"
 C_CODE_LOC=20000
+
+# Conversión de gráficos
+SPRITES_PATH="assets/sprites"      # Sprites PNG → ASM
+LOADER_SCREEN="assets/screen"      # Pantallas PNG → SCN
+MODE=0                             # Modo CPC (0, 1 o 2)
 ```
 
 **Nota:** 
 - `BP_ASM_PATH`: Ruta al código ensamblador 8BP (make_all_mygame.asm)
+- `SPRITES_PATH`: Convierte PNG a ASM (sprites para el juego)
+- `LOADER_SCREEN`: Convierte PNG a SCN (pantallas completas)
 - Todas las rutas son opcionales - comenta las que no uses
 - Solo se procesan las rutas definidas
 
@@ -444,10 +455,13 @@ mi-juego/
 │   └── menu.bas        # Menú
 │
 ├── assets/             # Recursos del proyecto
-│   └── sprites/        # Sprites PNG (SPRITES_PATH por defecto)
-│       ├── player.png
-│       ├── enemies/
-│       └── tiles/
+│   ├── sprites/        # Sprites PNG (SPRITES_PATH por defecto)
+│   │   ├── player.png
+│   │   ├── enemies/
+│   │   └── tiles/
+│   └── screen/         # Pantallas PNG (LOADER_SCREEN por defecto)
+│       ├── title.png       # 160x200 (Modo 0)
+│       └── loading.png
 │
 ├── raw/                # Archivos RAW (RAW_PATH) - opcional
 │   └── data.bin        # Datos sin encabezado AMSDOS
@@ -461,6 +475,8 @@ mi-juego/
 │   ├── 8BP0.bin        # Binario compilado
 │   ├── *.lst           # Listados
 │   ├── *.map           # Mapas de memoria
+│   ├── *.scn           # Pantallas SCN (si LOADER_SCREEN está configurado)
+│   ├── *.scn.info      # Info de paleta de pantallas
 │   └── *.ihx           # Intel HEX (C)
 │
 └── dist/               # Generado: DSK final
@@ -485,11 +501,12 @@ mi-juego/
 | `RVM_PATH` | Ruta al emulador | `"/path/to/RVM"` | ❌ Opcional |
 | `CPC_MODEL` | Modelo de CPC | `464` | ❌ Opcional |
 | `RUN_FILE` | Archivo a ejecutar | `"8BP0.BIN"` | ❌ Opcional |
-| `SPRITES_PATH` | Ruta a PNG para convertir | `"GRAFICOS"` | ❌ Opcional |
-| `MODE` | Modo CPC (0, 1 o 2) | `0` | ❌ Opcional |
+| `SPRITES_PATH` | Ruta a PNG sprites | `"assets/sprites"` | ❌ Opcional |
 | `SPRITES_OUT_FILE` | Archivo ASM de salida | `"sprites.asm"` | ❌ Opcional |
-| `SPRITES_TOLERANCE` | Tolerancia RGB | `8` | ❌ Opcional |
+| `SPRITES_TOLERANCE` | Tolerancia RGB sprites | `8` | ❌ Opcional |
 | `SPRITES_TRANSPARENT_INK` | INK transparente (0-26) | `""` | ❌ Opcional |
+| `LOADER_SCREEN` | Ruta a PNG pantallas | `"assets/screen"` | ❌ Opcional |
+| `MODE` | Modo CPC (0, 1 o 2) | `0` | ❌ Opcional |
 
 ---
 
@@ -740,7 +757,240 @@ pip3 install Pillow
 
 ---
 
-## 🔧 Compilación de Código C
+## �️ Conversión de Pantallas de Carga PNG a SCN
+
+Dev8BP incluye conversión automática de pantallas de carga PNG a formato SCN (formato nativo del Amstrad CPC) que se añaden directamente al DSK.
+
+### ¿Qué son las pantallas SCN?
+
+Los archivos SCN son pantallas completas (160x200, 320x200 o 640x200) en formato binario del Amstrad CPC. Se cargan directamente en la memoria de vídeo (`&C000`) y son ideales para:
+- Pantallas de carga
+- Títulos de juego
+- Menús
+- Créditos
+- Pantallas de transición
+
+### Configuración
+
+```bash
+# En dev8bp.conf
+
+# Ruta donde están los PNG de pantallas de carga (búsqueda recursiva)
+LOADER_SCREEN="assets/screen"
+
+# Modo CPC (0=16 colores, 1=4 colores, 2=2 colores)
+MODE=0
+```
+
+### Estructura de Carpetas
+
+```
+mi-juego/
+├── assets/
+│   └── screen/            # Pantallas PNG originales
+│       ├── title.png      # 160x200 px (Modo 0)
+│       ├── loading.png
+│       └── credits.png
+│
+├── obj/                   # Generado automáticamente
+│   ├── title.scn          # Archivo SCN
+│   ├── title.scn.info     # Info de paleta
+│   ├── loading.scn
+│   └── loading.scn.info
+│
+└── dist/
+    └── mi-juego.dsk       # DSK con las pantallas incluidas
+```
+
+### Requisitos de los PNG
+
+**Resolución según modo:**
+- **Modo 0**: 160x200 píxeles (16 colores)
+- **Modo 1**: 320x200 píxeles (4 colores)
+- **Modo 2**: 640x200 píxeles (2 colores)
+
+**Colores:**
+- Deben usar la paleta CPC (ver sección anterior)
+- La tolerancia se ajusta con `MODE` (configuración compartida con sprites)
+
+### Uso
+
+```bash
+# 1. Crear carpeta y añadir tus PNG
+mkdir -p assets/screen
+cp /ruta/a/pantalla.png assets/screen/
+
+# 2. Configurar dev8bp.conf
+LOADER_SCREEN="assets/screen"
+MODE=0
+
+# 3. Compilar
+dev8bp build
+```
+
+### Salida de la Compilación
+
+```
+═══════════════════════════════════════
+  Convertir Pantallas de Carga
+═══════════════════════════════════════
+
+ℹ Ruta:  assets/screen
+ℹ Modo:  0 (160x200, 16 colores)
+
+→ Convirtiendo title.png...
+✓ title.scn generado (16384 bytes)
+
+→ Convirtiendo loading.png...
+✓ loading.scn generado (16384 bytes)
+
+✓ 2 pantalla(s) convertida(s)
+
+→ Añadiendo pantallas al DSK...
+
+ℹ   title.scn
+ℹ   loading.scn
+✓ 2 pantalla(s) añadida(s) al DSK
+```
+
+### Archivo .scn.info
+
+Cada pantalla genera un archivo `.info` con información de la paleta:
+
+```
+FILE: title.scn
+WIDTH: 160
+HEIGHT: 200
+MODE: 0
+PALETTE COLORS: 8
+
+FW              HW              RGB
+0               0x14    (0, 0, 0)
+24              0x0A    (255, 255, 0)
+6               0x04    (255, 0, 0)
+...
+
+; ASM HW palette
+db 0x14, 0x0A, 0x04, ...
+
+' BASIC palette
+INK 0,0: INK 1,24: INK 2,6: ...
+
+// C palette
+hwpal = { 0x14, 0x0A, 0x04, ... }
+```
+
+Esta información te ayuda a configurar la paleta correctamente cuando cargues la pantalla.
+
+### Usar Pantallas desde BASIC
+
+```basic
+10 REM Cargar pantalla de título
+20 MODE 0
+30 LOAD"TITLE.SCN",&C000
+40 REM Configurar paleta (ver .info)
+50 INK 0,0: INK 1,24: INK 2,6
+60 PAUSE 100
+```
+
+### Usar Pantallas desde ASM
+
+```asm
+; Cargar pantalla
+ld hl, title_scn
+ld de, &C000
+ld bc, 16384
+ldir
+
+; Configurar paleta (HW)
+ld bc, &7F00
+ld a, 0
+out (c), a
+ld bc, &7F00+1
+ld a, &14    ; INK 0 = Negro
+out (c), a
+; ... más INKs
+
+title_scn:
+incbin "title.scn"
+```
+
+### Tamaño de Archivos SCN
+
+- **Modo 0**: 16384 bytes (16 KB)
+- **Modo 1**: 16384 bytes (16 KB)
+- **Modo 2**: 16384 bytes (16 KB)
+
+Todos los modos usan el mismo tamaño porque ocupan toda la memoria de vídeo.
+
+### Ejemplo Completo
+
+```bash
+# 1. Crear proyecto
+dev8bp new mi-aventura
+cd mi-aventura
+
+# 2. Crear pantalla de título (160x200 px, 16 colores)
+# Usa tu editor gráfico favorito (GIMP, Photoshop, etc.)
+# Guarda en: assets/screen/title.png
+
+# 3. Configurar dev8bp.conf
+LOADER_SCREEN="assets/screen"
+MODE=0
+
+# 4. Crear loader en BASIC
+cat > bas/loader.bas << 'EOF'
+10 MODE 0
+20 LOAD"TITLE.SCN",&C000
+30 INK 0,0: INK 1,24: INK 2,6
+40 PAUSE 200
+50 LOAD"8BP0.BIN"
+60 CALL &6B78
+EOF
+
+# 5. Compilar
+dev8bp build
+
+# 6. Ejecutar
+dev8bp run
+```
+
+### Solución de Problemas
+
+**Error: "Pillow no instalado"**
+```bash
+pip3 install Pillow
+```
+
+**Error: "Resolución incorrecta"**
+- Modo 0: debe ser exactamente 160x200 px
+- Modo 1: debe ser exactamente 320x200 px
+- Modo 2: debe ser exactamente 640x200 px
+
+**Error: "Demasiados colores"**
+- Modo 0: máximo 16 colores
+- Modo 1: máximo 4 colores
+- Modo 2: máximo 2 colores
+
+**Las pantallas no se cargan correctamente**
+- Verifica que uses `LOAD"NOMBRE.SCN",&C000`
+- Configura el MODE correcto antes de cargar
+- Aplica la paleta desde el archivo `.info`
+
+### Diferencias: Pantallas vs Sprites
+
+| Característica | Pantallas (SCN) | Sprites (ASM) |
+|----------------|-----------------|---------------|
+| Formato | Binario (.scn) | Código ASM (.asm) |
+| Uso | Pantallas completas | Gráficos del juego |
+| Tamaño | 16 KB (fijo) | Variable |
+| Dirección carga | &C000 (vídeo) | Cualquiera |
+| Incluido en | DSK | Binario compilado |
+| Resolución | Pantalla completa | Libre (sprites) |
+
+---
+
+## �🔧 Compilación de Código C
 
 ### Requisitos
 

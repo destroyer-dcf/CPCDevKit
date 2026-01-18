@@ -35,72 +35,8 @@ new_project() {
     
     # Crear estructura
     step "Creando estructura de directorios..."
-    mkdir -p "$project_name"/{ASM,bas,obj,dist,raw,assets/sprites}
+    mkdir -p "$project_name"/{ASM,bas,obj,dist,raw,MUSIC,assets/sprites,assets/screen}
     success "Directorios creados"
-    
-    # Crear README en assets/sprites
-    step "Creando guía de sprites..."
-    cat > "$project_name/assets/sprites/README.md" << 'SPRITES_EOF'
-# Sprites
-
-Coloca aquí tus archivos PNG para convertirlos automáticamente a ASM.
-
-## Configuración
-
-Edita `dev8bp.conf` y descomenta estas líneas:
-
-```bash
-SPRITES_PATH="assets/sprites"
-MODE=0
-SPRITES_OUT_FILE="ASM/sprites.asm"
-SPRITES_TOLERANCE=8
-```
-
-## Requisitos de los PNG
-
-### Ancho
-- **Modo 0**: múltiplo de 2 píxeles (2, 4, 6, 8, 10, 12, 14, 16...)
-- **Modo 1**: múltiplo de 4 píxeles (4, 8, 12, 16, 20...)
-- **Modo 2**: múltiplo de 8 píxeles (8, 16, 24, 32...)
-
-### Colores
-- **Modo 0**: máximo 16 colores
-- **Modo 1**: máximo 4 colores
-- **Modo 2**: máximo 2 colores
-
-### Paleta CPC
-Usa colores de la paleta Amstrad CPC o cercanos (con tolerancia).
-
-## Uso
-
-```bash
-# 1. Coloca tus PNG aquí
-cp /ruta/a/sprites/*.png assets/sprites/
-
-# 2. Compila
-dev8bp build
-
-# 3. El archivo ASM/sprites.asm se genera automáticamente
-```
-
-## Estructura Recomendada
-
-```
-assets/sprites/
-├── player.png
-├── enemies/
-│   ├── enemy1.png
-│   └── enemy2.png
-└── tiles/
-    ├── tile1.png
-    └── tile2.png
-```
-
-## Más Información
-
-https://github.com/destroyer-dcf/Dev8BP#-conversión-de-gráficos-png-a-asm
-SPRITES_EOF
-    success "Guía de sprites creada"
     
     # Crear configuración
     step "Creando archivo de configuración..."
@@ -124,7 +60,10 @@ $project_name/
 ├── ASM/             # Código ensamblador 8BP
 ├── bas/             # Archivos BASIC
 ├── assets/          # Recursos del proyecto
-│   └── sprites/     # Sprites PNG (se convierten a ASM automáticamente)
+│   ├── sprites/     # Sprites PNG (se convierten a ASM automáticamente)
+│   └── screen/      # Pantallas de carga PNG (se convierten a SCN)
+├── raw/             # Archivos binarios sin procesar
+├── MUSIC/           # Archivos de música
 ├── obj/             # Archivos intermedios (generado)
 └── dist/            # Imagen DSK final (generado)
 \`\`\`
