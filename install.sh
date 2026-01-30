@@ -216,12 +216,29 @@ if [[ -d "$DEVCPC_HOME" ]]; then
         warning "DevCPC ya está instalado en $DEVCPC_HOME"
     fi
     echo ""
-    read -p "¿Deseas reinstalar y reemplazar la instalación existente? [y/N]: " -r </dev/tty
-    echo ""
     
-    if [[ ! $REPLY =~ ^[YySs]$ ]]; then
-        info "Instalación cancelada"
-        exit 0
+    # Permitir forzar reinstalación con variable de entorno
+    if [[ "$DEVCPC_FORCE_INSTALL" == "1" ]]; then
+        info "Forzando reinstalación (DEVCPC_FORCE_INSTALL=1)"
+    else
+        # Intentar leer desde /dev/tty si está disponible
+        if [[ -t 0 ]] || [[ -e /dev/tty ]]; then
+            read -p "¿Deseas reinstalar y reemplazar la instalación existente? [y/N]: " -r </dev/tty || true
+        else
+            # Si no hay terminal, usar valor por defecto
+            REPLY="N"
+            warning "No se detectó terminal interactiva, cancelando instalación"
+        fi
+        echo ""
+        
+        if [[ ! $REPLY =~ ^[YySs]$ ]]; then
+            info "Instalación cancelada"
+            echo ""
+            info "Para forzar la reinstalación, ejecuta:"
+            echo -e "  ${CYAN}DEVCPC_FORCE_INSTALL=1 curl -fsSL https://raw.githubusercontent.com/destroyer-dcf/CPCDevKit/develop/install.sh | bash${NC}"
+            echo ""
+            exit 0
+        fi
     fi
     
     info "Eliminando instalación anterior..."
