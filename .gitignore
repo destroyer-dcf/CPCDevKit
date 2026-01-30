@@ -11,7 +11,7 @@ ENV/
 env.bak/
 venv.bak/
 
-# Dev8BP - Archivos generados
+# DevCPC - Archivos generados
 obj/
 dist/
 *.bin
@@ -23,14 +23,14 @@ dist/
 *.rel
 *.sym
 
-# Dev8BP - Backups
+# DevCPC - Backups
 *.backup
 *.backup_build
 *.bak
 *.BAK
 *.encoding_backup
 
-# Dev8BP - Temporal
+# DevCPC - Temporal
 tmp/
 temp/
 
@@ -59,3 +59,6 @@ NOTAS.TXT
 docs/images/demo.yml
 docs/images/readme.md
 david/*
+test/*
+.shellcheckrc
+destroyer/*

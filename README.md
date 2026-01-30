@@ -1,4 +1,4 @@
-# Dev8BP CLI - Sistema de Compilación para 8BP
+# DevCPC CLI - SDK para desarrollo en Amstrad CPC
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows%20WSL-lightgrey.svg)]()
@@ -7,34 +7,38 @@
 [![Amstrad CPC](https://img.shields.io/badge/Amstrad-CPC-red.svg)]()
 [![8BP](https://img.shields.io/badge/8BP-v0.43-purple.svg)](https://github.com/jjaranda13/8BP)
 
-<p align="center">
-  <img src="docs/images/help.png" alt="Dev8BP Help" width="800"/>
-</p>
-
 ---
 
 
 
-## 🎯 ¿Por qué Dev8BP CLI?
+## 🎯 ¿Por qué DevCPC CLI?
 
-Esta idea nace de la necesidad de poder compilar la librería [8BP](https://github.com/jjaranda13/8BP) para Amstrad CPC en sistemas operativos que no fueran Windows de forma nativa. Gracias al ensamblador [ABASM](https://github.com/fragarco/abasm) creado por [fragarco](https://github.com/fragarco) todo esto ha sido posible.
+Esta idea nace de la necesidad de poder compilar la librería [8BP](https://github.com/jjaranda13/8BP) para Amstrad CPC en sistemas operativos que no fueran Windows de forma nativa. Gracias al ensamblador [ABASM](https://github.com/fragarco/abasm) creado por [fragarco](https://github.com/fragarco) todo esto ha sido posible. A partir de ahi se han ido implementando nuevas funcionalidades para facilitar el desarrollo de proyectos en Basic y ensamblador para Amstrad CPC
 
 ---
 
 ## � ¿Qué incluye?
 
 ### Compilación automatizada
-- ✅ **8BP** - Librería de programación para Amstrad CPC
-- ✅ **ASM** - Código ensamblador 8BP (make_all_*.asm)
-- ✅ **BASIC** - Archivos BASIC (se añaden al DSK)
+- ✅ **8BP** - Compilacion de la librería de programación 8BP (make_all_*.asm)
+- ✅ **ASM** - Compilacion Código ensamblador
+- ✅ **BASIC** - Archivos BASIC / compilacion con Abasc (en proceso)
 - ✅ **RAW** - Archivos binarios sin encabezado AMSDOS
-- ✅ **C** - Código C compilado con SDCC
-- ✅ **8BP0.BIN** - Archivo binario de 8BP (make_all_*.bin)
-- ✅ **MI_JUEGO.DSK** - Generacion de DSK
+- ✅ **C** - Código C compilado con SDCC para 8BP
+- ✅ **DSK** - Generación de imagen de disco DSK con todos los archivos del proyecto
+- ✅ **CDT** - Generación de imagen de cinta CDT con todos los archivos del proyecto en el orden establecido
+- ✅ **RETRO VIRTUAL MACHINE** - Pruebas sobre emulador RVM con un solo comando
+- ✅ **M4 BOARD** - Pruebas sobre tarjeta M4 con un solo comando
+- ✅ **PANTALLAS DE CARGA** - Creacion de pantallas de cargar desde una imagen png
+- ✅ **SPRITES** - Creacion de sprites desde una imagen png
+- ✅ **CREACION DE PROYECTOS** - Creacion de proyectos con ejemplos Basic, ASM o 8BP
+
 
 ### Herramientas integradas
 - ✅ **[ABASM](https://github.com/fragarco/abasm)** - Ensamblador para Z80
 - ✅ **[dsk.py](https://github.com/fragarco/abasm)** - Gestión de imágenes DSK
+- ✅ **[cdt.py](https://github.com/fragarco/abasm)** - Gestión de imágenes CDT (cintas)
+- ✅ **[map.py](https://github.com/fragarco/abasm)** - Gestión de archivos de configuración INI
 - ✅ **hex2bin** - Conversión para código C (multiplataforma)
 - ✅ **[png2asm.py](https://github.com/javy-fernandez/8bp-graphics-converter)** - Conversión automática de PNG a ASM (sprites)
 - ✅ **[img.py](https://github.com/fragarco/abasm)** - Conversión automática de PNG a SCN (pantallas)
@@ -51,11 +55,10 @@ Esta idea nace de la necesidad de poder compilar la librería [8BP](https://gith
 
 ## 📦 Requisitos
 - **Python 3.x** (para scripts)
-- **ABASM** (ensamblador Z80) - instalado automáticamente
 - **SDCC** (compilador C) - opcional, solo si usas C
-- **RetroVirtualMachine** - opcional, solo si usas `dev8bp run`
+- **RetroVirtualMachine** - opcional, solo si usas `devcpc run`
 
-‼️ **Importante:** Solo esta soportada la version v2.0 BETA-1 R7 (10/07/2019) de Retro Virtual Machine que es la unica que tiene las opciones de desarrollo activadas, tal y como se indica en su su [Web](https://www.retrovirtualmachine.org/blog/future/).
+‼️ **Importante:** Solo esta soportada la version **v2.0 BETA-1 R7 (10/07/2019)** de Retro Virtual Machine que es la unica que tiene las opciones de desarrollo activadas, tal y como se indica en su su [Web](https://www.retrovirtualmachine.org/blog/future/).
 
 Si decides utilizar la conversion de imagenes a ASM necesitaras instalar la libreria de python Pillow en tu sistema.
 
@@ -72,24 +75,25 @@ Si decides utilizar la conversion de imagenes a ASM necesitaras instalar la libr
 ### 📌 Roadmap
 - ✅ Conversion de imagenes a asm (sprites)
 - ✅ Conversion de imagenes a scn (pantallas de carga)
-- 🚧 Creacion de imagenes de cinta CDT
-- 🚧 Soporte para pruebas en M4Board
-- 🚧 Soporte para proyectos asm (No 8BP)
-- 🚧 Compilacion bas con abasc
+- ✅ Creacion de imagenes de cinta CDT
+- ✅ Ejecución flexible DSK/CDT con auto-detección
+- ✅ Soporte para proyectos asm (No 8BP)
+- 🚧 Soporte para pruebas en M4Board (En desarrollo)
+- 🚧 Compilacion bas con abasc (En desarrollo)
 
 
 ## 🚀 Como Empezar
 
-<p align="center">
-  <img src="docs/images/demo1.gif" alt="Dev8BP Demo" width="100%"/>
-</p>
+<!-- <p align="center">
+  <img src="docs/images/demo1.gif" alt="DevCPC Demo" width="100%"/>
+</p> -->
 
 ### 1. Instalación
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/destroyer-dcf/Dev8BP.git
-cd Dev8BP
+git clone https://github.com/destroyer-dcf/DevCPC.git
+cd DevCPC
 
 # Ejecutar instalación
 ./setup.sh
@@ -102,7 +106,7 @@ source ~/.bashrc  # o ~/.zshrc en macOS
 
 ```bash
 # Crear nuevo proyecto
-dev8bp new mi-juego
+devcpc new mi-juego
 
 # Ver la estructura creada
 ls -la
@@ -110,7 +114,7 @@ ls -la
 
 ### 3. Configurar el proyecto
 
-Edita `dev8bp.conf` según tus necesidades:
+Edita `devcpc.conf` según tus necesidades:
 
 ```bash
 # Configuración básica
@@ -118,7 +122,7 @@ PROJECT_NAME="mi-juego"
 BUILD_LEVEL=0
 
 # Rutas (comenta las que no uses)
-BP_ASM_PATH="ASM"
+ASM_PATH="asm/make_all_mygame.asm"
 BASIC_PATH="bas"
 #RAW_PATH="raw"
 #C_PATH="C"
@@ -138,7 +142,7 @@ cp /ruta/a/tus/archivos/*.bas bas/
 
 ```bash
 # Compilar todo
-dev8bp build
+devcpc build
 
 # Ver el resultado
 ls -la dist/
@@ -147,54 +151,56 @@ ls -la dist/
 ### 6. Ejecutar (opcional)
 
 ```bash
-# Configurar emulador en dev8bp.conf
+# Configurar emulador en devcpc.conf
 # RVM_PATH="/ruta/a/RetroVirtualMachine"
 # CPC_MODEL=464
 # RUN_FILE="8BP0.BIN"
 
 # Ejecutar
-dev8bp run
+devcpc run
 ```
 
 ---
 
 ## 📚 Comandos Disponibles
 
-### `dev8bp new <nombre>`
+### `devcpc new <nombre>`
 Crea un nuevo proyecto con estructura completa.
 
 ```bash
-dev8bp new mi-super-juego
+devcpc new mi-super-juego
 ```
 
 **Crea:**
 - Directorios: `ASM/`, `bas/`, `obj/`, `dist/`, `assets/sprites/`, `assets/screen/`
-- Archivo de configuración: `dev8bp.conf`
+- Archivo de configuración: `devcpc.conf`
 - `README.md` con instrucciones
 - `.gitignore` configurado
 
 ---
 
-### `dev8bp build`
+### `devcpc build`
 Compila el proyecto completo.
 
 ```bash
-dev8bp build
+devcpc build
 ```
 
 **Proceso:**
 1. ✅ Convierte sprites PNG a ASM (si `SPRITES_PATH` está definido)
 2. ✅ Convierte pantallas PNG a SCN (si `LOADER_SCREEN` está definido)
-3. ✅ Compila código ASM con ABASM (si `BP_ASM_PATH` está definido)
+3. ✅ Compila código ASM con ABASM (si `ASM_PATH` está definido)
 4. ✅ Verifica límites de gráficos (`_END_GRAPH < 42040`)
 5. ✅ Crea imagen DSK
 6. ✅ Añade binario ASM al DSK (8BP0.bin, 8BP1.bin, etc.)
 7. ✅ Añade pantallas SCN al DSK (si `LOADER_SCREEN` está definido)
-8. ✅ Añade archivos BASIC al DSK (si `BASIC_PATH` está definido)
-9. ✅ Añade archivos RAW al DSK (si `RAW_PATH` está definido)
-10. ✅ Compila código C con SDCC (si `C_PATH` está definido)
-11. ✅ Verifica límites de memoria C (< 23999)
-12. ✅ Muestra catálogo del DSK
+8. ✅ Compila código C con SDCC (si `C_PATH` está definido)
+9. ✅ Verifica límites de memoria C (< 23999)
+10. ✅ Añade archivos BASIC al DSK (si `BASIC_PATH` está definido)
+11. ✅ Añade archivos RAW al DSK (si `RAW_PATH` está definido)
+12. ✅ Muestra contenido del DSK
+13. ✅ Crea cinta CDT (si `CDT` y `CDT_FILES` están configurados)
+14. ✅ Muestra catálogo del CDT
 
 
 **Ejemplo de salida:**
@@ -211,7 +217,7 @@ dev8bp build
 ✓ DSK creado
 ✓ 1 archivo(s) BASIC añadidos
 
-Catálogo del DSK:
+Contenido del DSK:
 0: 8BP0    .BIN  [ st: 0 extend: 0 data pages: 128 ]
 1: LOADER  .BAS  [ st: 0 extend: 0 data pages: 3 ]
 
@@ -220,11 +226,11 @@ Catálogo del DSK:
 
 ---
 
-### `dev8bp clean`
+### `devcpc clean`
 Limpia archivos generados.
 
 ```bash
-dev8bp clean
+devcpc clean
 ```
 
 **Elimina:**
@@ -234,11 +240,11 @@ dev8bp clean
 
 ---
 
-### `dev8bp info`
+### `devcpc info`
 Muestra la configuración del proyecto.
 
 ```bash
-dev8bp info
+devcpc info
 ```
 
 **Muestra:**
@@ -269,11 +275,11 @@ Directorios:
 
 ---
 
-### `dev8bp validate`
+### `devcpc validate`
 Valida el proyecto antes de compilar.
 
 ```bash
-dev8bp validate
+devcpc validate
 ```
 
 **Verifica:**
@@ -293,7 +299,7 @@ dev8bp validate
 ✓ BUILD_LEVEL: 0 (Todas las funcionalidades)
 
 → Validando rutas...
-✓ BP_ASM_PATH: ASM
+✓ ASM_PATH: ASM
 ✓   make_all_mygame.asm encontrado
 ✓ BASIC_PATH: bas (2 archivo(s) .bas)
 
@@ -309,46 +315,53 @@ dev8bp validate
 
 ---
 
-### `dev8bp run`
-Ejecuta el DSK en RetroVirtualMachine.
+### `devcpc run`
+Ejecuta el proyecto en RetroVirtualMachine (DSK o CDT).
 
 ```bash
-dev8bp run
+devcpc run           # Usa RUN_MODE del config (auto por defecto)
+devcpc run --dsk     # Fuerza ejecución desde DSK (disco)
+devcpc run --cdt     # Fuerza ejecución desde CDT (cinta)
 ```
 
 **Requisitos:**
 - RetroVirtualMachine instalado
-- `RVM_PATH` configurado en `dev8bp.conf`
+- `RVM_PATH` configurado en `devcpc.conf`
 
 **Características:**
 - Cierra sesiones anteriores automáticamente
-- Carga el DSK generado
-- Auto-ejecuta archivo si `RUN_FILE` está configurado
+- **Modo auto**: Detecta automáticamente si usar DSK o CDT
+  - Si `CDT` y `CDT_FILES` están configurados → usa CDT
+  - Sino → usa DSK
+- **DSK**: Carga el disco y auto-ejecuta `RUN_FILE` si está configurado
+- **CDT**: Monta la cinta y ejecuta `RUN"` con auto-play
+  - En CPC 664/6128 usa automáticamente `|TAPE` para cambiar a cinta
+- Los argumentos `--dsk` y `--cdt` permiten forzar el medio sin editar la configuración
 
 > **‼️ Importante:**
 > Para poder probar sobre el Emulador RetroVirtualMachine, es necesario tener instalada la version **v2.0 BETA-1 R7 10/07/2019** Que tal y como informa su desarrollador en la [Web](https://www.retrovirtualmachine.org/blog/future/) es la que tiene habilitada la funcionalidad para desarrollo.
 
 ---
 
-### `dev8bp help`
+### `devcpc help`
 Muestra ayuda general.
 
 ```bash
-dev8bp help
+devcpc help
 ```
 
 ---
 
-### `dev8bp version`
+### `devcpc version`
 Muestra la versión.
 
 ```bash
-dev8bp version
+devcpc version
 ```
 
 ---
 
-## ⚙️ Configuración (dev8bp.conf)
+## ⚙️ Configuración (devcpc.conf)
 
 ### Configuración básica
 
@@ -374,7 +387,7 @@ BUILD_LEVEL=0
 
 ```bash
 # Código ensamblador 8BP
-BP_ASM_PATH="ASM"
+ASM_PATH="asm/make_all_mygame.asm"
 
 # Archivos BASIC (se añaden al DSK automáticamente)
 BASIC_PATH="bas"
@@ -394,7 +407,7 @@ MODE=0                             # Modo CPC (0, 1 o 2)
 ```
 
 **Nota:** 
-- `BP_ASM_PATH`: Ruta al código ensamblador 8BP (make_all_mygame.asm)
+- `ASM_PATH`: **Archivo** de código ensamblador 8BP (no directorio). Debe apuntar a `asm/make_all_mygame.asm`
 - `SPRITES_PATH`: Convierte PNG a ASM (sprites para el juego)
 - `LOADER_SCREEN`: Convierte PNG a SCN (pantallas completas)
 - Todas las rutas son opcionales - comenta las que no uses
@@ -411,7 +424,20 @@ DIST_DIR="dist"
 
 # Nombre del DSK
 DSK="${PROJECT_NAME}.dsk"
+
+# Nombre del CDT (cinta - opcional)
+CDT="${PROJECT_NAME}.cdt"
+
+# Archivos a incluir en la cinta (orden importa)
+CDT_FILES="loader.bas 8BP0.bin main.bin"
 ```
+
+**Nota sobre CDT:**
+- `CDT`: Nombre del archivo de cinta a generar
+- `CDT_FILES`: Lista de archivos a incluir **en el orden de carga**
+- Los archivos deben existir en `obj/` y estar en `${PROJECT_NAME}.map`
+- Si comentas `CDT` o `CDT_FILES`, no se genera la cinta
+- Tipos soportados: `.bas` (BASIC), `.bin` (binarios), `.scn` (pantallas), `.txt` (raw)
 
 ### Emulador (opcional)
 
@@ -428,8 +454,25 @@ RVM_PATH="/Applications/Retro Virtual Machine 2.app/Contents/MacOS/Retro Virtual
 # Modelo de CPC
 CPC_MODEL=464
 
-# Archivo a ejecutar automáticamente
+# Archivo a ejecutar automáticamente (solo para DSK)
 RUN_FILE="8BP0.BIN"
+
+# Modo de ejecución: "auto", "dsk" o "cdt"
+RUN_MODE="auto"
+```
+
+**Modos de ejecución (RUN_MODE):**
+
+| Modo | Descripción | Uso |
+|------|-------------|-----|
+| `auto` | Detecta automáticamente | Si CDT existe y está configurado → CDT, sino → DSK |
+| `dsk` | Siempre usa DSK | Monta disco y ejecuta RUN_FILE |
+| `cdt` | Siempre usa CDT | Monta cinta con auto-play |
+
+**Override desde CLI:**
+```bash
+devcpc run --dsk    # Ignora RUN_MODE, siempre DSK
+devcpc run --cdt    # Ignora RUN_MODE, siempre CDT
 ```
 
 ---
@@ -440,11 +483,11 @@ RUN_FILE="8BP0.BIN"
 
 ```
 mi-juego/
-├── dev8bp.conf          # Configuración del proyecto
+├── devcpc.conf          # Configuración del proyecto
 ├── README.md            # Documentación
 ├── .gitignore          # Git ignore
 │
-├── ASM/                # Código ensamblador 8BP (BP_ASM_PATH)
+├── ASM/                # Código ensamblador 8BP (ASM_PATH)
 │   ├── make_all_mygame.asm    # Archivo principal
 │   ├── images_mygame.asm      # Gráficos
 │   ├── music_mygame.asm       # Música
@@ -479,8 +522,9 @@ mi-juego/
 │   ├── *.scn.info      # Info de paleta de pantallas
 │   └── *.ihx           # Intel HEX (C)
 │
-└── dist/               # Generado: DSK final
-    └── mi-juego.dsk    # Imagen DSK lista para usar
+└── dist/               # Generado: DSK y CDT finales
+    ├── mi-juego.dsk    # Imagen DSK (disco)
+    └── mi-juego.cdt    # Imagen CDT (cinta) - opcional
 ```
 
 ### Variables de configuración
@@ -488,19 +532,25 @@ mi-juego/
 | Variable | Descripción | Ejemplo | Requerido |
 |----------|-------------|---------|-----------|
 | `PROJECT_NAME` | Nombre del proyecto | `"MI_JUEGO"` | ✅ Sí |
-| `BUILD_LEVEL` | Nivel de compilación (0-4) | `0` | ✅ Sí |
-| `BP_ASM_PATH` | Ruta al código ASM 8BP | `"ASM"` | ❌ Opcional |
+| `BUILD_LEVEL` | Nivel de compilación (0-4) | `0` | ✅ Sí (8BP) |
+| `ASM_PATH` | **Archivo** ASM 8BP | `"asm/make_all_mygame.asm"` | ❌ Opcional |
 | `BASIC_PATH` | Ruta a archivos BASIC | `"bas"` | ❌ Opcional |
 | `RAW_PATH` | Ruta a archivos RAW | `"raw"` | ❌ Opcional |
 | `C_PATH` | Ruta a código C | `"C"` | ❌ Opcional |
 | `C_SOURCE` | Archivo C principal | `"main.c"` | ❌ Si C_PATH |
 | `C_CODE_LOC` | Dirección de carga C | `20000` | ❌ Si C_PATH |
+| `LOADADDR` | Dirección carga ASM  | `0x1200` | ❌ ASM sin 8BP |
+| `SOURCE` | Archivo fuente ASM  | `"main"` | ❌ ASM sin 8BP |
+| `TARGET` | Binario ASM  | `"program"` | ❌ ASM sin 8BP |
 | `OBJ_DIR` | Directorio objetos | `"obj"` | ❌ Opcional |
 | `DIST_DIR` | Directorio salida | `"dist"` | ❌ Opcional |
 | `DSK` | Nombre del DSK | `"${PROJECT_NAME}.dsk"` | ❌ Opcional |
+| `CDT` | Nombre del CDT (cinta) | `"${PROJECT_NAME}.cdt"` | ❌ Opcional |
+| `CDT_FILES` | Archivos en la cinta | `"loader.bas 8BP0.bin"` | ❌ Si CDT |
 | `RVM_PATH` | Ruta al emulador | `"/path/to/RVM"` | ❌ Opcional |
 | `CPC_MODEL` | Modelo de CPC | `464` | ❌ Opcional |
-| `RUN_FILE` | Archivo a ejecutar | `"8BP0.BIN"` | ❌ Opcional |
+| `RUN_FILE` | Archivo a ejecutar (DSK) | `"8BP0.BIN"` | ❌ Opcional |
+| `RUN_MODE` | Modo ejecución (auto/dsk/cdt) | `"auto"` | ❌ Opcional |
 | `SPRITES_PATH` | Ruta a PNG sprites | `"assets/sprites"` | ❌ Opcional |
 | `SPRITES_OUT_FILE` | Archivo ASM de salida | `"sprites.asm"` | ❌ Opcional |
 | `SPRITES_TOLERANCE` | Tolerancia RGB sprites | `8` | ❌ Opcional |
@@ -510,15 +560,157 @@ mi-juego/
 
 ---
 
+## 💾 Creación de Cintas CDT
+
+DevCPC puede generar archivos CDT (cintas) además de DSK, permitiendo ejecutar tus juegos desde cinta en emuladores o hardware real.
+
+### ¿Qué es un CDT?
+
+CDT (Cass Data Tape) es el formato estándar para cintas de Amstrad CPC. A diferencia del DSK que almacena archivos en disco, el CDT graba los datos secuencialmente como en una cinta real.
+
+### Configuración Básica
+
+```bash
+# En devcpc.conf
+
+# Activar generación de CDT
+CDT="${PROJECT_NAME}.cdt"
+
+# Lista de archivos en orden de carga
+CDT_FILES="loader.bas 8BP0.bin main.bin"
+```
+
+### ⚠️ Orden Importante
+
+El orden en `CDT_FILES` es **crítico** - los archivos se grabarán y cargarán en ese orden secuencial:
+
+```bash
+# ✅ Correcto: loader primero, luego binarios
+CDT_FILES="loader.bas 8BP0.bin game.bin"
+
+# ❌ Incorrecto: intentará cargar binarios antes del loader
+CDT_FILES="game.bin 8BP0.bin loader.bas"
+```
+
+### Tipos de Archivos Soportados
+
+| Tipo | Extensión | Descripción | Uso en CPC |
+|------|-----------|-------------|------------|
+| **BASIC** | `.bas` | Programas BASIC tokenizados | `RUN"` |
+| **Binario** | `.bin` | Código máquina con cabecera | `RUN"ARCHIVO"` |
+| **Pantalla** | `.scn` | Pantallas 16KB en &C000 | `RUN"SCREEN"` |
+| **RAW** | `.txt`, etc | Datos sin cabecera AMSDOS | Lectura directa |
+
+### Proceso de Generación
+
+Durante `devcpc build`, si CDT está configurado:
+
+1. **Lee `${PROJECT_NAME}.map`**: Obtiene tipo, load address y execute address de cada archivo
+2. **Valida archivos**: Verifica que todos los archivos en `CDT_FILES` existen
+3. **Crea CDT vacío**: Inicializa el archivo de cinta
+4. **Añade archivos en orden**: Graba cada archivo secuencialmente
+   - **BASIC/ASCII**: Usa `--put-ascii` con nombre en MAYÚSCULAS
+   - **BIN/SCN**: Usa `--put-bin` con load/execute addresses
+   - **RAW**: Usa `--put-raw` sin cabecera
+5. **Muestra catálogo**: Lista bloques y estructura de la cinta
+
+### Ejemplo de Salida
+
+```
+═══════════════════════════════════════
+  Crear Cinta CDT
+═══════════════════════════════════════
+
+ℹ CDT: my_game.cdt
+ℹ Archivos: loader.bas 8BP0.bin ciclo.bin
+
+→ Creando CDT vacío...
+✓ CDT creado: dist/my_game.cdt
+
+→ Añadiendo loader.bas al CDT...
+ℹ   Tipo: BASIC
+ℹ   Name: LOADER
+✓ loader.bas añadido
+
+→ Añadiendo 8BP0.bin al CDT...
+ℹ   Tipo: BINARIO
+ℹ   Load: 0x5C30
+ℹ   Exec: 0x5C30
+ℹ   Name: 8BP0
+✓ 8BP0.bin añadido
+
+→ Añadiendo ciclo.bin al CDT...
+ℹ   Tipo: BINARIO
+ℹ   Load: 0x4E20
+ℹ   Exec: 0x4E20
+ℹ   Name: CICLO
+✓ ciclo.bin añadido
+
+✓ 3 archivo(s) añadido(s) al CDT
+```
+
+### Ejecutar CDT
+
+```bash
+# Ejecución automática (usa RUN_MODE del config)
+devcpc run
+
+# Forzar CDT
+devcpc run --cdt
+
+# Forzar DSK
+devcpc run --dsk
+```
+
+**Diferencias de ejecución:**
+
+| Medio | Comando CPC | Ventajas | Desventajas |
+|-------|-------------|----------|-------------|
+| **DSK** | `RUN"FILE"` | Acceso aleatorio, rápido | Requiere unidad de disco |
+| **CDT** | `RUN"` | Sin disco, más "retro" | Carga secuencial, más lento |
+
+**Modelos con disco (664/6128):**
+- DevCPC automáticamente usa `|TAPE` antes de `RUN"` para cambiar del disco a la cinta
+- No necesitas configurar nada especial
+
+### Ejemplo Completo
+
+```bash
+# devcpc.conf
+PROJECT_NAME="space_invaders"
+BUILD_LEVEL=0
+
+# Generar DSK y CDT
+DSK="${PROJECT_NAME}.dsk"
+CDT="${PROJECT_NAME}.cdt"
+
+# Orden de carga en cinta
+CDT_FILES="intro.bas title.scn loader.bas 8BP0.bin game.bin"
+
+# Ejecutar en cinta por defecto
+RUN_MODE="cdt"
+```
+
+```bash
+# Compilar y ejecutar
+devcpc build && devcpc run
+```
+
+Resultado:
+- `dist/space_invaders.dsk` - Versión disco (todos los archivos)
+- `dist/space_invaders.cdt` - Versión cinta (solo los especificados en CDT_FILES)
+
+---
+
 ## 🎨 Conversión de Gráficos PNG a ASM
 
-Dev8BP incluye una herramienta automática para convertir tus sprites PNG a formato ASM compatible con Amstrad CPC.
+DevCPC incluye una herramienta automática para convertir tus sprites PNG a formato ASM compatible con Amstrad CPC.
 
 
 ### Configuración
 
 ```bash
-# En dev8bp.conf
+# En devcpc.conf
 
 # Ruta donde están tus PNG (búsqueda recursiva)
 SPRITES_PATH="assets/sprites"
@@ -600,10 +792,10 @@ mi-juego/
 
 ```bash
 # 1. Coloca tus PNG en la carpeta assets/sprites/
-# 2. Configura SPRITES_PATH en dev8bp.conf
+# 2. Configura SPRITES_PATH en devcpc.conf
 SPRITES_PATH="assets/sprites"
 # 3. Compila normalmente
-dev8bp build
+devcpc build
 ```
 
 La conversión se ejecuta automáticamente antes de compilar el ASM.
@@ -679,20 +871,20 @@ SPRITES_TRANSPARENT_INK=0
 
 ```bash
 # 1. Crear proyecto
-dev8bp new mi-juego
+devcpc new mi-juego
 cd mi-juego
 
 # 2. Copiar tus PNG a la carpeta de sprites
 cp /ruta/a/sprites/*.png assets/sprites/
 
-# 3. Configurar dev8bp.conf
+# 3. Configurar devcpc.conf
 SPRITES_PATH="assets/sprites"
 MODE=0
 SPRITES_OUT_FILE="ASM/sprites.asm"
 SPRITES_TOLERANCE=8
 
 # 4. Compilar
-dev8bp build
+devcpc build
 ```
 
 **Salida:**
@@ -759,7 +951,7 @@ pip3 install Pillow
 
 ## �️ Conversión de Pantallas de Carga PNG a SCN
 
-Dev8BP incluye conversión automática de pantallas de carga PNG a formato SCN (formato nativo del Amstrad CPC) que se añaden directamente al DSK.
+DevCPC incluye conversión automática de pantallas de carga PNG a formato SCN (formato nativo del Amstrad CPC) que se añaden directamente al DSK.
 
 ### ¿Qué son las pantallas SCN?
 
@@ -773,7 +965,7 @@ Los archivos SCN son pantallas completas (160x200, 320x200 o 640x200) en formato
 ### Configuración
 
 ```bash
-# En dev8bp.conf
+# En devcpc.conf
 
 # Ruta donde están los PNG de pantallas de carga (búsqueda recursiva)
 LOADER_SCREEN="assets/screen"
@@ -820,12 +1012,12 @@ mi-juego/
 mkdir -p assets/screen
 cp /ruta/a/pantalla.png assets/screen/
 
-# 2. Configurar dev8bp.conf
+# 2. Configurar devcpc.conf
 LOADER_SCREEN="assets/screen"
 MODE=0
 
 # 3. Compilar
-dev8bp build
+devcpc build
 ```
 
 ### Salida de la Compilación
@@ -927,14 +1119,14 @@ Todos los modos usan el mismo tamaño porque ocupan toda la memoria de vídeo.
 
 ```bash
 # 1. Crear proyecto
-dev8bp new mi-aventura
+devcpc new mi-aventura
 cd mi-aventura
 
 # 2. Crear pantalla de título (160x200 px, 16 colores)
 # Usa tu editor gráfico favorito (GIMP, Photoshop, etc.)
 # Guarda en: assets/screen/title.png
 
-# 3. Configurar dev8bp.conf
+# 3. Configurar devcpc.conf
 LOADER_SCREEN="assets/screen"
 MODE=0
 
@@ -949,10 +1141,10 @@ cat > bas/loader.bas << 'EOF'
 EOF
 
 # 5. Compilar
-dev8bp build
+devcpc build
 
 # 6. Ejecutar
-dev8bp run
+devcpc run
 ```
 
 ### Solución de Problemas
@@ -1056,7 +1248,7 @@ MEMORY 18999
 ### Configuración
 
 ```bash
-# En dev8bp.conf
+# En devcpc.conf
 RVM_PATH="/Applications/Retro Virtual Machine 2.app/Contents/MacOS/Retro Virtual Machine 2"
 CPC_MODEL=464
 RUN_FILE="8BP0.BIN"
@@ -1066,10 +1258,10 @@ RUN_FILE="8BP0.BIN"
 
 ```bash
 # Compilar y ejecutar
-dev8bp build && dev8bp run
+devcpc build && devcpc run
 
 # Solo ejecutar (si ya compilaste)
-dev8bp run
+devcpc run
 ```
 
 ### Características
@@ -1104,33 +1296,33 @@ Depende de los comandos 8BP que uses en tu juego:
 
 ### ¿Puedo cambiar BUILD_LEVEL después?
 
-Sí, simplemente cambia el valor en `dev8bp.conf` y recompila:
+Sí, simplemente cambia el valor en `devcpc.conf` y recompila:
 
 ```bash
-# Editar dev8bp.conf
+# Editar devcpc.conf
 BUILD_LEVEL=2
 
 # Recompilar
-dev8bp clean
-dev8bp build
+devcpc clean
+devcpc build
 ```
 
 ### ¿Qué hace make_all_mygame.asm?
 
-Es el archivo principal que incluye todos los demás archivos ASM de tu proyecto. Dev8BP modifica automáticamente la variable `ASSEMBLING_OPTION` en este archivo según tu `BUILD_LEVEL`.
+Es el archivo principal que incluye todos los demás archivos ASM de tu proyecto. DevCPC modifica automáticamente la variable `ASSEMBLING_OPTION` en este archivo según tu `BUILD_LEVEL`.
 
 ### ¿Puedo usar mi propio ensamblador?
 
-No, Dev8BP está diseñado específicamente para usar ABASM con la librería 8BP. ABASM está incluido y no necesitas instalarlo.
+No, DevCPC está diseñado específicamente para usar ABASM con la librería 8BP. ABASM está incluido y no necesitas instalarlo.
 
 ### ¿Funciona en Windows?
 
 Sí, pero necesitas WSL (Windows Subsystem for Linux) o Git Bash. El sistema está diseñado para entornos Unix (bash).
 
-### ¿Cómo actualizo Dev8BP?
+### ¿Cómo actualizo DevCPC?
 
 ```bash
-cd Dev8BP
+cd DevCPC
 git pull origin main
 ./setup.sh
 ```
@@ -1147,32 +1339,32 @@ La documentación completa de 8BP está en el [repositorio oficial de 8BP](https
 
 ```bash
 # Crear proyecto
-dev8bp new juego-asm
+devcpc new juego-asm
 cd juego-asm
 
-# Configurar (dev8bp.conf)
+# Configurar (devcpc.conf)
 PROJECT_NAME="juego-asm"
 BUILD_LEVEL=0
-BP_ASM_PATH="ASM"
+ASM_PATH="ASM"
 
 # Copiar código
 cp /ruta/a/make_all_mygame.asm ASM/
 
 # Compilar
-dev8bp build
+devcpc build
 ```
 
 ### Ejemplo 2: Proyecto ASM + BASIC
 
 ```bash
 # Crear proyecto
-dev8bp new juego-completo
+devcpc new juego-completo
 cd juego-completo
 
 # Configurar
 PROJECT_NAME="juego-completo"
 BUILD_LEVEL=0
-BP_ASM_PATH="ASM"
+ASM_PATH="ASM"
 BASIC_PATH="bas"
 
 # Copiar archivos
@@ -1180,20 +1372,20 @@ cp /ruta/a/*.asm ASM/
 cp /ruta/a/*.bas bas/
 
 # Compilar
-dev8bp build
+devcpc build
 ```
 
 ### Ejemplo 3: Proyecto con C
 
 ```bash
 # Crear proyecto
-dev8bp new juego-c
+devcpc new juego-c
 cd juego-c
 
 # Configurar
 PROJECT_NAME="juego-c"
 BUILD_LEVEL=0
-BP_ASM_PATH="ASM"
+ASM_PATH="ASM"
 C_PATH="C"
 C_SOURCE="main.c"
 C_CODE_LOC=20000
@@ -1205,7 +1397,7 @@ cp -r /ruta/a/8BP_wrapper C/
 cp -r /ruta/a/mini_BASIC C/
 
 # Compilar
-dev8bp build
+devcpc build
 ```
 
 ---
@@ -1238,7 +1430,7 @@ MIT License - Copyright (c) 2026 Destroyer
 
 Si encuentras un Bug o deseas plantear alguna mejora ¡Compártelo!
 
-- [Bugs - Mejoras](https://github.com/destroyer-dcf/Dev8BP/issues)
+- [Bugs - Mejoras](https://github.com/destroyer-dcf/DevCPC/issues)
 
 
 ---

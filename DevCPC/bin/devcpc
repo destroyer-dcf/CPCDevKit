@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# DevCPC CLI - Sistema de compilación para Amstrad CPC
+# Copyright (c) 2026 Destroyer
+# ==============================================================================
+
+# Detectar directorio de instalación
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Si DEVCPC_PATH no está definida, usar el directorio padre del script
+if [[ -z "$DEVCPC_PATH" ]]; then
+    export DEVCPC_PATH="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
+
+export DEVCPC_CLI_ROOT="$DEVCPC_PATH"
+export DEVCPC_LIB="$DEVCPC_PATH/lib"
+export DEVCPC_TOOLS="$DEVCPC_PATH/tools"
+
+# Cargar librerías
+source "$DEVCPC_LIB/colors.sh"
+source "$DEVCPC_LIB/utils.sh"
+source "$DEVCPC_LIB/config.sh"
+
+# Versión
+VERSION=$(get_version)
+
+# Función de ayuda principal
+show_help() {
+    echo ""
+    show_logo
+    # echo -e "${BLUE}═════════════════════════════════════════════════${NC}"
+    echo -e "${GREEN}CLI v$VERSION${NC}"
+    echo -e "${GREEN}By Destroyer 2026${NC}"
+    # echo -e "${BLUE}═════════════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "${CYAN}SDK para desarrollo en Amstrad CPC${NC}"
+    echo ""
+    echo -e "${YELLOW}Uso:${NC}"
+    echo "  devcpc <comando> [opciones]"
+    echo ""
+    echo -e "${YELLOW}Comandos disponibles:${NC}"
+    echo -e "  ${GREEN}new${NC} <nombre>      Crear nuevo proyecto"
+    echo -e "  ${GREEN}build${NC}             Compilar proyecto actual"
+    echo -e "  ${GREEN}clean${NC}             Limpiar archivos generados"
+    echo -e "  ${GREEN}run${NC} [--dsk|--cdt] Ejecutar en emulador (DSK o CDT)"
+    echo -e "  ${GREEN}info${NC}              Mostrar configuración"
+    echo -e "  ${GREEN}validate${NC}          Validar proyecto"
+    echo -e "  ${GREEN}help${NC}              Mostrar ayuda"
+    echo -e "  ${GREEN}version${NC}           Mostrar versión"
+    echo ""
+    echo -e "${YELLOW}Opciones de ejecución:${NC}"
+    echo -e "  ${CYAN}--dsk${NC}             Forzar ejecución desde disco (DSK)"
+    echo -e "  ${CYAN}--cdt${NC}             Forzar ejecución desde cinta (CDT)"
+    echo -e "  ${DIM}Por defecto usa RUN_MODE del config (auto/dsk/cdt)${NC}"
+    echo ""
+    echo -e "${YELLOW}Ejemplos:${NC}"
+    echo "  devcpc new mi-juego       # Crear nuevo proyecto"
+    echo "  devcpc build              # Compilar"
+    echo "  devcpc run                # Ejecutar en emulador"
+    echo ""
+    echo -e "${CYAN}Documentación:${NC} https://github.com/destroyer-dcf/DevCPC"
+    echo ""
+}
+
+# Función de versión
+show_version() {
+    echo -e "\nDevCPC CLI v$VERSION\n"
+}
+
+# Comando principal
+main() {
+    local command="${1:-help}"
+    shift || true
+
+    case "$command" in
+        new)
+            source "$DEVCPC_LIB/new_project.sh"
+            new_project "$@"
+            ;;
+        build)
+            source "$DEVCPC_LIB/build.sh"
+            build_project "$@"
+            ;;
+        clean)
+            source "$DEVCPC_LIB/clean.sh"
+            clean_project "$@"
+            ;;
+        run)
+            source "$DEVCPC_LIB/run.sh"
+            run_project "$@"
+            ;;
+        info)
+            show_project_info "$@"
+            ;;
+        validate)
+            source "$DEVCPC_LIB/validate.sh"
+            validate_project "$@"
+            ;;
+        version)
+            show_version
+            ;;
+        help|--help|-h)
+            show_help
+            ;;
+        *)
+            echo -e "${RED}Error: Comando desconocido '$command'${NC}"
+            echo ""
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+# Ejecutar
+main "$@"

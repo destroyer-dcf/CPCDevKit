@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Dev8BP CLI - Script de instalación
+# DevCPC CLI - Script de instalación
 # Copyright (c) 2026 Destroyer
 # ==============================================================================
 
@@ -16,28 +16,28 @@ NC='\033[0m'
 
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════${NC}"
-echo -e "${BLUE}  Dev8BP CLI - Instalación${NC}"
+echo -e "${BLUE}  DevCPC CLI - Instalación${NC}"
 echo -e "${BLUE}═══════════════════════════════════════${NC}"
 echo ""
 
 # Detectar directorio de instalación
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEV8BP_PATH="$SCRIPT_DIR/Dev8bp"
+DEVCPC_PATH="$SCRIPT_DIR/DevCPC"
 
 echo -e "${CYAN}Directorio de instalación:${NC} $SCRIPT_DIR"
-echo -e "${CYAN}Dev8BP:${NC} $DEV8BP_PATH"
+echo -e "${CYAN}DevCPC:${NC} $DEVCPC_PATH"
 echo ""
 
-# Verificar que existe Dev8bp/bin/dev8bp
-if [[ ! -f "$DEV8BP_PATH/bin/dev8bp" ]]; then
-    echo -e "${RED}✗ Error: No se encontró Dev8bp/bin/dev8bp${NC}"
+# Verificar que existe DevCPC/bin/devcpc
+if [[ ! -f "$DEVCPC_PATH/bin/devcpc" ]]; then
+    echo -e "${RED}✗ Error: No se encontró DevCPC/bin/devcpc${NC}"
     echo -e "${RED}  Asegúrate de estar en el directorio raíz del proyecto${NC}"
     exit 1
 fi
 
 # Hacer ejecutable
-chmod +x "$DEV8BP_PATH/bin/dev8bp"
-echo -e "${GREEN}✓${NC} Dev8bp/bin/dev8bp configurado como ejecutable"
+chmod +x "$DEVCPC_PATH/bin/devcpc"
+echo -e "${GREEN}✓${NC} DevCPC/bin/devcpc configurado como ejecutable"
 
 # Detectar shell
 SHELL_NAME=$(basename "$SHELL")
@@ -59,8 +59,8 @@ echo -e "${CYAN}Archivo de configuración:${NC} $SHELL_RC"
 echo ""
 
 # Verificar si ya está configurado
-if grep -q "DEV8BP_PATH" "$SHELL_RC" 2>/dev/null; then
-    echo -e "${YELLOW}⚠${NC} Dev8BP CLI ya está configurado en $SHELL_RC"
+if grep -q "DEVCPC_PATH" "$SHELL_RC" 2>/dev/null; then
+    echo -e "${YELLOW}⚠${NC} DevCPC CLI ya está configurado en $SHELL_RC"
     echo ""
     read -p "¿Quieres reconfigurar? [s/N]: " -n 1 -r
     echo ""
@@ -72,21 +72,21 @@ if grep -q "DEV8BP_PATH" "$SHELL_RC" 2>/dev/null; then
     
     # Eliminar configuración anterior
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' '/# Dev8BP CLI/d' "$SHELL_RC"
-        sed -i '' '/DEV8BP_PATH/d' "$SHELL_RC"
-        sed -i '' '/dev8bp/d' "$SHELL_RC"
+        sed -i '' '/# DevCPC CLI/d' "$SHELL_RC"
+        sed -i '' '/DEVCPC_PATH/d' "$SHELL_RC"
+        sed -i '' '/devcpc/d' "$SHELL_RC"
     else
-        sed -i '/# Dev8BP CLI/d' "$SHELL_RC"
-        sed -i '/DEV8BP_PATH/d' "$SHELL_RC"
-        sed -i '/dev8bp/d' "$SHELL_RC"
+        sed -i '/# DevCPC CLI/d' "$SHELL_RC"
+        sed -i '/DEVCPC_PATH/d' "$SHELL_RC"
+        sed -i '/devcpc/d' "$SHELL_RC"
     fi
 fi
 
 # Añadir configuración
 echo "" >> "$SHELL_RC"
-echo "# Dev8BP CLI" >> "$SHELL_RC"
-echo "export DEV8BP_PATH=\"$DEV8BP_PATH\"" >> "$SHELL_RC"
-echo "export PATH=\"\$PATH:\$DEV8BP_PATH/bin\"" >> "$SHELL_RC"
+echo "# DevCPC CLI" >> "$SHELL_RC"
+echo "export DEVCPC_PATH=\"$DEVCPC_PATH\"" >> "$SHELL_RC"
+echo "export PATH=\"\$PATH:\$DEVCPC_PATH/bin\"" >> "$SHELL_RC"
 
 echo -e "${GREEN}✓${NC} Configuración añadida a $SHELL_RC"
 echo ""
@@ -109,7 +109,7 @@ if command -v python3 &> /dev/null; then
     echo -e "${GREEN}✓${NC} Python 3 instalado: $PYTHON_VERSION"
 else
     echo -e "${RED}✗${NC} Python 3 no encontrado"
-    echo -e "${YELLOW}  Instala Python 3 para usar Dev8BP CLI${NC}"
+    echo -e "${YELLOW}  Instala Python 3 para usar DevCPC CLI${NC}"
 fi
 
 # Verificar SDCC (opcional)
@@ -123,19 +123,19 @@ fi
 # Verificar herramientas incluidas
 echo ""
 echo -e "${CYAN}Herramientas incluidas:${NC}"
-if [[ -f "$DEV8BP_PATH/tools/abasm/src/abasm.py" ]]; then
+if [[ -f "$DEVCPC_PATH/tools/abasm/src/abasm.py" ]]; then
     echo -e "${GREEN}✓${NC} ABASM (ensamblador Z80)"
 else
     echo -e "${RED}✗${NC} ABASM no encontrado"
 fi
 
-if [[ -f "$DEV8BP_PATH/tools/abasm/src/dsk.py" ]]; then
+if [[ -f "$DEVCPC_PATH/tools/abasm/src/dsk.py" ]]; then
     echo -e "${GREEN}✓${NC} dsk.py (gestión de DSK)"
 else
     echo -e "${RED}✗${NC} dsk.py no encontrado"
 fi
 
-if [[ -d "$DEV8BP_PATH/tools/hex2bin" ]]; then
+if [[ -d "$DEVCPC_PATH/tools/hex2bin" ]]; then
     echo -e "${GREEN}✓${NC} hex2bin (conversión para C)"
 else
     echo -e "${RED}✗${NC} hex2bin no encontrado"
@@ -153,17 +153,17 @@ echo "  1. Recarga tu shell:"
 echo -e "     ${CYAN}source $SHELL_RC${NC}"
 echo ""
 echo "  2. Verifica la instalación:"
-echo -e "     ${CYAN}dev8bp version${NC}"
+echo -e "     ${CYAN}devcpc version${NC}"
 echo ""
 echo "  3. Crea un nuevo proyecto:"
-echo -e "     ${CYAN}dev8bp new mi-juego${NC}"
+echo -e "     ${CYAN}devcpc new mi-juego${NC}"
 echo ""
 echo "  4. Compila tu proyecto:"
 echo -e "     ${CYAN}cd mi-juego${NC}"
-echo -e "     ${CYAN}dev8bp build${NC}"
+echo -e "     ${CYAN}devcpc build${NC}"
 echo ""
 echo "  5. Para más ayuda:"
-echo -e "     ${CYAN}dev8bp help${NC}"
+echo -e "     ${CYAN}devcpc help${NC}"
 echo ""
 
 echo -e "${GREEN}¡Listo para crear juegos para Amstrad CPC! 🎮${NC}"
