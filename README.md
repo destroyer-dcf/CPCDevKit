@@ -9,8 +9,6 @@
 
 ---
 
-
-
 ## 🎯 ¿Por qué DevCPC CLI?
 
 Esta idea nace de la necesidad de poder compilar la librería [8BP](https://github.com/jjaranda13/8BP) para Amstrad CPC en sistemas operativos que no fueran Windows de forma nativa. Gracias al ensamblador [ABASM](https://github.com/fragarco/abasm) creado por [fragarco](https://github.com/fragarco) todo esto ha sido posible. A partir de ahi se han ido implementando nuevas funcionalidades para facilitar el desarrollo de proyectos en Basic y ensamblador para Amstrad CPC
