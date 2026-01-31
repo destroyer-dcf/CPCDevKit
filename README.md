@@ -9,8 +9,6 @@
 
 ---
 
-
-
 ## 🎯 ¿Por qué DevCPC CLI?
 
 Esta idea nace de la necesidad de poder compilar la librería [8BP](https://github.com/jjaranda13/8BP) para Amstrad CPC en sistemas operativos que no fueran Windows de forma nativa. Gracias al ensamblador [ABASM](https://github.com/fragarco/abasm) creado por [fragarco](https://github.com/fragarco) todo esto ha sido posible. A partir de ahi se han ido implementando nuevas funcionalidades para facilitar el desarrollo de proyectos en Basic y ensamblador para Amstrad CPC
@@ -90,17 +88,75 @@ Si decides utilizar la conversion de imagenes a ASM necesitaras instalar la libr
 
 ### 1. Instalación
 
+Ejecuta el siguiente comando en tu terminal:
+
 ```bash
-# Clonar el repositorio
-git clone https://github.com/destroyer-dcf/DevCPC.git
-cd DevCPC
-
-# Ejecutar instalación
-./setup.sh
-
-# Recargar shell
-source ~/.bashrc  # o ~/.zshrc en macOS
+curl -fsSL https://destroyer.me/devcpc | bash
 ```
+
+O con `wget`:
+
+```bash
+wget -qO- https://destroyer.me/devcpc | bash
+```
+
+El instalador:
+- Descarga la última versión de DevCPC
+- Instala en `~/.DevCPC`
+- Configura automáticamente tu shell (bash/zsh)
+- Añade DevCPC al PATH
+
+### Después de la instalación
+
+Recarga tu shell:
+
+```bash
+source ~/.bashrc  # Para bash
+source ~/.zshrc   # Para zsh
+```
+
+O simplemente abre una nueva terminal.
+
+Verifica la instalación:
+
+```bash
+devcpc version
+```
+
+### Actualización
+
+Para actualizar DevCPC a la última versión:
+
+```bash
+devcpc update
+```
+
+O reinstala ejecutando el instalador nuevamente:
+
+```bash
+curl -fsSL https://destroyer.me/devcpc | bash
+```
+
+**Nota:** Para reinstalar, primero debes borrar la instalación existente:
+```bash
+rm -rf ~/.DevCPC
+curl -fsSL https://destroyer.me/devcpc | bash
+```
+
+### Instalación Manual
+
+Si prefieres instalar manualmente:
+
+1. Descarga la última versión desde [Releases](https://github.com/destroyer-dcf/CPCDevKit/releases)
+2. Extrae el archivo:
+   ```bash
+   tar -xzf DevCPC-X.Y.Z.tar.gz
+   ```
+3. Ejecuta el script de instalación:
+   ```bash
+   cd CPCDevKit
+   ./setup.sh
+   ```
 
 ### 2. Crear tu primer proyecto
 
@@ -146,6 +202,7 @@ devcpc build
 
 # Ver el resultado
 ls -la dist/
+
 ```
 
 ### 6. Ejecutar (opcional)
@@ -353,10 +410,63 @@ devcpc help
 ---
 
 ### `devcpc version`
-Muestra la versión.
+Muestra la versión instalada y verifica si hay actualizaciones disponibles.
 
 ```bash
 devcpc version
+```
+
+**Salida:**
+```
+DevCPC CLI v1.0.1
+
+⚠ Nueva versión disponible: v1.0.2 (actual: v1.0.1)
+Actualizar: curl -fsSL https://destroyer.me/devcpc | bash
+```
+
+---
+
+### `devcpc update`
+Actualiza DevCPC a la última versión disponible.
+
+```bash
+devcpc update
+```
+
+**Proceso:**
+1. ✅ Verifica la versión actual
+2. ✅ Consulta la última versión en GitHub Releases
+3. ✅ Descarga el archivo tar.gz de la release
+4. ✅ Extrae y reemplaza los archivos en `~/.DevCPC`
+5. ✅ Preserva tu configuración y proyectos
+6. ✅ Actualiza automáticamente
+
+**Ejemplo de salida:**
+```bash
+ℹ DevCPC CLI v1.0.1
+
+ℹ Verificando actualizaciones...
+✓ Última versión disponible: v1.0.2
+
+⚠ Nueva versión disponible: v1.0.2
+
+¿Deseas actualizar a v1.0.2? [S/n]: s
+
+ℹ Iniciando actualización...
+ℹ Descargando DevCPC v1.0.2...
+✓ Descarga completada
+ℹ Extrayendo archivos...
+ℹ Actualizando archivos en ~/.DevCPC...
+
+✓ DevCPC actualizado exitosamente a v1.0.2
+
+ℹ Verifica la instalación con: devcpc version
+```
+
+**Nota:** Si ya tienes la última versión instalada, el comando te lo indicará:
+```bash
+devcpc update
+✓ Ya tienes la última versión instalada
 ```
 
 ---

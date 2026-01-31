@@ -13,16 +13,16 @@ org 32100 ; hasta 33600 tenemos 1.5KB desde v42
 ; instrumentos en un solo fichero.
 
 ;archivo de instrumentos. OJO TIENE QUE SER SOLO UNO
-read	"../MUSIC/marcha3.mus.asm" ;
+read	"../music/marcha3.mus.asm" ;
 
 ; archivos de musica
 SONG_0:
-INCBIN	"../MUSIC/marcha3.mus" ;
+INCBIN	"../music/marcha3.mus" ;
 SONG_0_END:
 
 
 SONG_1:
-;INCBIN	"../MUSIC/otracancion.mus" ;
+;INCBIN	"../music/otracancion.mus" ;
 SONG_1_END:
 
 SONG_2:

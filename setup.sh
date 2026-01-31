@@ -13,31 +13,59 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m'
+echo ""
+echo -e "${YELLOW}▛▀▖      ▞▀▖▛▀▖▞▀▖${NC}"
+echo -e "${YELLOW}▌ ▌▞▀▖▌ ▌▌  ▙▄▘▌  ${NC}"
+echo -e "${YELLOW}▌ ▌▛▀ ▐▐ ▌ ▖▌  ▌ ▖${NC}"
+echo -e "${YELLOW}▀▀ ▝▀▘ ▘ ▝▀ ▘  ▝▀ ${NC}"
 
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════${NC}"
-echo -e "${BLUE}  DevCPC CLI - Instalación${NC}"
+echo -e "${BLUE} Instalación${NC}"
 echo -e "${BLUE}═══════════════════════════════════════${NC}"
 echo ""
 
-# Detectar directorio de instalación
+# Detectar directorio fuente y destino
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEVCPC_PATH="$SCRIPT_DIR/DevCPC"
+SOURCE_DEVCPC="$SCRIPT_DIR/DevCPC"
+INSTALL_DIR="$HOME/.DevCPC"
 
-echo -e "${CYAN}Directorio de instalación:${NC} $SCRIPT_DIR"
-echo -e "${CYAN}DevCPC:${NC} $DEVCPC_PATH"
+echo -e "${CYAN}Directorio fuente:${NC} $SOURCE_DEVCPC"
+echo -e "${CYAN}Directorio destino:${NC} $INSTALL_DIR"
 echo ""
 
-# Verificar que existe DevCPC/bin/devcpc
-if [[ ! -f "$DEVCPC_PATH/bin/devcpc" ]]; then
+# Verificar que existe DevCPC/bin/devcpc en la fuente
+if [[ ! -f "$SOURCE_DEVCPC/bin/devcpc" ]]; then
     echo -e "${RED}✗ Error: No se encontró DevCPC/bin/devcpc${NC}"
     echo -e "${RED}  Asegúrate de estar en el directorio raíz del proyecto${NC}"
     exit 1
 fi
 
+# Verificar si ya existe instalación
+if [[ -d "$INSTALL_DIR" ]]; then
+    echo -e "${YELLOW}⚠${NC} Ya existe una instalación en $INSTALL_DIR"
+    echo ""
+    read -p "¿Quieres reemplazarla? [s/N]: " -n 1 -r
+    echo ""
+    
+    if [[ ! $REPLY =~ ^[SsYy]$ ]]; then
+        echo -e "${YELLOW}⚠${NC} Instalación cancelada"
+        exit 0
+    fi
+    
+    echo -e "${CYAN}ℹ${NC} Eliminando instalación anterior..."
+    rm -rf "$INSTALL_DIR"
+fi
+
+# Copiar archivos a ~/.DevCPC
+echo -e "${CYAN}ℹ${NC} Copiando archivos a $INSTALL_DIR..."
+mkdir -p "$INSTALL_DIR"
+cp -r "$SOURCE_DEVCPC/"* "$INSTALL_DIR/"
+echo -e "${GREEN}✓${NC} Archivos copiados exitosamente"
+
 # Hacer ejecutable
-chmod +x "$DEVCPC_PATH/bin/devcpc"
-echo -e "${GREEN}✓${NC} DevCPC/bin/devcpc configurado como ejecutable"
+chmod +x "$INSTALL_DIR/bin/devcpc"
+echo -e "${GREEN}✓${NC} DevCPC configurado como ejecutable"
 
 # Detectar shell
 SHELL_NAME=$(basename "$SHELL")
@@ -85,7 +113,7 @@ fi
 # Añadir configuración
 echo "" >> "$SHELL_RC"
 echo "# DevCPC CLI" >> "$SHELL_RC"
-echo "export DEVCPC_PATH=\"$DEVCPC_PATH\"" >> "$SHELL_RC"
+echo "export DEVCPC_PATH=\"$INSTALL_DIR\"" >> "$SHELL_RC"
 echo "export PATH=\"\$PATH:\$DEVCPC_PATH/bin\"" >> "$SHELL_RC"
 
 echo -e "${GREEN}✓${NC} Configuración añadida a $SHELL_RC"
@@ -123,19 +151,19 @@ fi
 # Verificar herramientas incluidas
 echo ""
 echo -e "${CYAN}Herramientas incluidas:${NC}"
-if [[ -f "$DEVCPC_PATH/tools/abasm/src/abasm.py" ]]; then
+if [[ -f "$INSTALL_DIR/tools/abasm/src/abasm.py" ]]; then
     echo -e "${GREEN}✓${NC} ABASM (ensamblador Z80)"
 else
     echo -e "${RED}✗${NC} ABASM no encontrado"
 fi
 
-if [[ -f "$DEVCPC_PATH/tools/abasm/src/dsk.py" ]]; then
+if [[ -f "$INSTALL_DIR/tools/abasm/src/dsk.py" ]]; then
     echo -e "${GREEN}✓${NC} dsk.py (gestión de DSK)"
 else
     echo -e "${RED}✗${NC} dsk.py no encontrado"
 fi
 
-if [[ -d "$DEVCPC_PATH/tools/hex2bin" ]]; then
+if [[ -d "$INSTALL_DIR/tools/hex2bin" ]]; then
     echo -e "${GREEN}✓${NC} hex2bin (conversión para C)"
 else
     echo -e "${RED}✗${NC} hex2bin no encontrado"

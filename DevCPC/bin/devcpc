@@ -45,6 +45,7 @@ show_help() {
     echo -e "  ${GREEN}run${NC} [--dsk|--cdt] Ejecutar en emulador (DSK o CDT)"
     echo -e "  ${GREEN}info${NC}              Mostrar configuración"
     echo -e "  ${GREEN}validate${NC}          Validar proyecto"
+    echo -e "  ${GREEN}update${NC}            Actualizar DevCPC"
     echo -e "  ${GREEN}help${NC}              Mostrar ayuda"
     echo -e "  ${GREEN}version${NC}           Mostrar versión"
     echo ""
@@ -64,7 +65,8 @@ show_help() {
 
 # Función de versión
 show_version() {
-    echo -e "\nDevCPC CLI v$VERSION\n"
+    echo -e "\nDevCPC CLI v$VERSION"
+    check_for_updates "$VERSION"
 }
 
 # Comando principal
@@ -95,6 +97,10 @@ main() {
         validate)
             source "$DEVCPC_LIB/validate.sh"
             validate_project "$@"
+            ;;
+        update)
+            source "$DEVCPC_LIB/update.sh"
+            update_devcpc
             ;;
         version)
             show_version

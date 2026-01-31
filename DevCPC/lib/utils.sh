@@ -14,6 +14,31 @@ get_version() {
     fi
 }
 
+# Verificar si hay nueva versión disponible
+check_for_updates() {
+    local current_version="$1"
+    local github_api="https://api.github.com/repos/destroyer-dcf/DevCPC/releases/latest"
+    
+    # Intentar obtener la última versión (silenciosamente)
+    local latest_version
+    latest_version=$(curl -fsSL "$github_api" 2>/dev/null | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/' 2>/dev/null)
+    
+    # Si no se pudo obtener, salir silenciosamente
+    if [[ -z "$latest_version" ]]; then
+        return 0
+    fi
+    
+    # Comparar versiones (simple comparación de strings)
+    if [[ "$latest_version" != "$current_version" ]]; then
+        echo -e "${YELLOW}Nueva versión disponible: v${latest_version} (actual: v${current_version})${NC}"
+        echo -e "${CYAN}Actualizar: devcpc update${NC}"
+        echo ""
+        return 1
+    fi
+    
+    return 0
+}
+
 # DevCPC logo
 show_logo() {     
 #     echo -e "${YELLOW}██████╗ ███████╗██╗   ██╗ █████╗ ██████╗ ██████╗  ${NC}"   

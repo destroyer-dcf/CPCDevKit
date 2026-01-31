@@ -1,0 +1,118 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Get version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version_number=${VERSION#v}" >> $GITHUB_OUTPUT
+      
+      - name: Get previous tag
+        id: previoustag
+        run: |
+          PREV_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+          echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -z "${{ steps.previoustag.outputs.tag }}" ]; then
+            CHANGELOG=$(git log --pretty=format:"- %s" --no-merges)
+          else
+            CHANGELOG=$(git log ${{ steps.previoustag.outputs.tag }}..HEAD --pretty=format:"- %s" --no-merges)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Create distribution archive
+        run: |
+          mkdir -p dist
+          
+          # Crear tar.gz excluyendo archivos innecesarios
+          tar -czf dist/DevCPC-${{ steps.version.outputs.version_number }}.tar.gz \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='*.pyc' \
+            --exclude='__pycache__' \
+            --exclude='.DS_Store' \
+            --exclude='test/tmp' \
+            --exclude='destroyer' \
+            --exclude='david' \
+            --exclude='examples' \
+            --exclude='docs' \
+            --exclude='dist' \
+            --exclude='NOTAS.TXT' \
+            .
+          
+          # Crear zip también
+          zip -r dist/DevCPC-${{ steps.version.outputs.version_number }}.zip . \
+            -x '.git/*' \
+            -x '.github/*' \
+            -x 'node_modules/*' \
+            -x '*.pyc' \
+            -x '__pycache__/*' \
+            -x '.DS_Store' \
+            -x 'test/tmp/*' \
+            -x 'destroyer/*' \
+            -x 'david/*' \
+            -x 'examples/*' \
+            -x 'docs/*' \
+            -x 'dist/*' \
+            -x 'NOTAS.TXT'
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: DevCPC ${{ steps.version.outputs.version }}
+          body: |
+            ## DevCPC ${{ steps.version.outputs.version }}
+            
+            ### Cambios en esta versión
+            
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ### Instalación
+            
+            **Linux/macOS:**
+            ```bash
+            # Descargar y extraer
+            curl -L https://github.com/destroyer-dcf/DevCPC/releases/download/${{ steps.version.outputs.version }}/DevCPC-${{ steps.version.outputs.version_number }}.tar.gz | tar xz
+            cd CPCDevKit
+            
+            # Instalar
+            sudo ./setup.sh
+            ```
+            
+            **Descarga manual:**
+            Descarga el archivo comprimido según tu sistema operativo y sigue las instrucciones del README.md
+            
+            ---
+            
+            Para más información, consulta la [documentación completa](https://github.com/destroyer-dcf/DevCPC#readme).
+          files: |
+            dist/DevCPC-${{ steps.version.outputs.version_number }}.tar.gz
+            dist/DevCPC-${{ steps.version.outputs.version_number }}.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

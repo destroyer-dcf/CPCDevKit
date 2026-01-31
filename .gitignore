@@ -62,3 +62,5 @@ david/*
 test/*
 .shellcheckrc
 destroyer/*
+cleanup-releases.sh
+release.sh
