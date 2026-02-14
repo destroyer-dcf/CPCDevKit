@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
+# DevCPC CLI - Sistema de compilación para Amstrad CPC
+# Copyright (c) 2026 Destroyer
 # screens.sh - Conversión de pantallas de carga PNG a SCN
 # ==============================================================================
 # shellcheck disable=SC2155

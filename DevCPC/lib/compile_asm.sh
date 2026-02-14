@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
+# DevCPC CLI - Sistema de compilación para Amstrad CPC
+# Copyright (c) 2026 Destroyer
 # compile_asm.sh - Compilación de código ASM con ABASM
 # ==============================================================================
 # shellcheck disable=SC2155

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
+# DevCPC CLI - Sistema de compilación para Amstrad CPC
+# Copyright (c) 2026 Destroyer
 # compile_c.sh - Compilación de código C con SDCC
 # ==============================================================================
 # shellcheck disable=SC2155

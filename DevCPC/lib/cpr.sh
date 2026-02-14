@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
+# DevCPC CLI - Sistema de compilación para Amstrad CPC
+# Copyright (c) 2026 Destroyer
 # cpr.sh - Gestión de imágenes CPR (Cartuchos)
 # ==============================================================================
 # shellcheck disable=SC2155
