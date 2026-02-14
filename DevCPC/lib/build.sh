@@ -17,6 +17,7 @@ build_project() {
     source "$DEVCPC_LIB/compile_c.sh"
     source "$DEVCPC_LIB/dsk.sh"
     source "$DEVCPC_LIB/cdt.sh"
+    source "$DEVCPC_LIB/cpr.sh"
     source "$DEVCPC_LIB/graphics.sh"
     source "$DEVCPC_LIB/screens.sh"
     
@@ -117,7 +118,7 @@ build_project() {
             echo ""
         # Proyecto ASM sin 8bp: usar ${TARGET}.bin
         elif [[ -z "$BUILD_LEVEL" && -n "$TARGET" && -f "$OBJ_DIR/${TARGET}.bin" ]]; then
-            if ! add_bin_to_dsk "$DSK" "${TARGET}.bin" "$LOADADDR" "$LOADADDR"; then
+            if ! add_bin_to_dsk "$DSK" "${TARGET}.bin" "$LOADADDR" "MAIN" "${SOURCE}.map"; then
                 error "Error al añadir binario ASM al DSK"
                 exit 1
             fi
@@ -159,6 +160,22 @@ build_project() {
         show_cdt_catalog
     fi
     
+    # 10. Crear CPR (cartucho) si está configurado
+    if [[ -n "$CPR" ]]; then
+        echo ""
+        header "Crear Cartucho CPR"
+        
+        info "CPR: $CPR"
+        info "Ubicación: $DIST_DIR/$CPR"
+        echo ""
+        
+        if ! create_cpr "$DSK" "$CPR" "$CPR_EXECUTE"; then
+            warning "Error al crear cartucho CPR (no crítico)"
+        else
+            show_cpr_info
+        fi
+    fi
+    
     # Resumen final
     header "Compilación Completada"
     
@@ -180,6 +197,10 @@ build_project() {
     
     if [[ -n "$CDT" && -f "$DIST_DIR/$CDT" ]]; then
         echo "  CDT: $DIST_DIR/$CDT"
+    fi
+    
+    if [[ -n "$CPR" && -f "$DIST_DIR/$CPR" ]]; then
+        echo "  CPR: $DIST_DIR/$CPR"
     fi
     
     echo ""

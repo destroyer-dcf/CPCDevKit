@@ -27,6 +27,8 @@ load_config() {
     OBJ_DIR="${OBJ_DIR:-obj}"
     DIST_DIR="${DIST_DIR:-dist}"
     DSK="${DSK:-${PROJECT_NAME}.dsk}"
+    CPR="${CPR:-${PROJECT_NAME}.cpr}"
+    CPR_EXECUTE="${CPR_EXECUTE:-disc}"
 }
 
 # Mostrar información del proyecto

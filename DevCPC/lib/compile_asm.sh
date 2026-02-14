@@ -286,7 +286,7 @@ compile_asm_pure() {
     local compile_output
     local source_name="$(basename "$source_path")"
     
-    if compile_output=$(cd "$source_dir" && $python_cmd "$abasm_path" "$source_name" --tolerance 2 2>&1); then
+    if compile_output=$(cd "$source_dir" && $python_cmd "$abasm_path" --start="$LOADADDR" "$source_name" --tolerance 2 2>&1); then
         # Buscar binario generado
         local generated_bin="$source_dir/${SOURCE%.asm}.bin"
         

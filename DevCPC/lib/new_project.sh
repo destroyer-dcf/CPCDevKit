@@ -79,7 +79,7 @@ new_project() {
     step "Copiando estructura de plantilla '$template_dir'..."
     cp -r "$template_path" "$project_name"
     success "Estructura copiada"
-    
+
     # Reemplazar {{PROJECT_NAME}} en el project.conf
     step "Configurando proyecto..."
     if [[ -f "$project_name/project.conf" ]]; then

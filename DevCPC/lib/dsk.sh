@@ -42,6 +42,7 @@ add_bin_to_dsk() {
     local bin_file="$2"
     local load_addr="$3"
     local start_addr="$4"
+    local map_file="${5:-}"  # Opcional
     
     local dsk_path="$DIST_DIR/$dsk_name"
     local bin_path="$OBJ_DIR/$bin_file"
@@ -56,7 +57,13 @@ add_bin_to_dsk() {
     
     step "Añadiendo binario: $bin_file"
     
-    if (cd "$OBJ_DIR" && $python_cmd "$dsk_tool" "$(pwd)/../$dsk_path" --put-bin "$bin_file" --load-addr "$load_addr" --start-addr "$start_addr" 2>&1); then
+    # Construir comando con map file si existe
+    local map_param=""
+    if [[ -n "$map_file" && -f "$OBJ_DIR/$map_file" ]]; then
+        map_param="--map-file $map_file"
+    fi
+    
+    if (cd "$OBJ_DIR" && $python_cmd "$dsk_tool" "$(pwd)/../$dsk_path" --put-bin "$bin_file" --load-addr "$load_addr" $map_param --start-addr "$start_addr" 2>&1); then
         success "Binario añadido"
         return 0
     else

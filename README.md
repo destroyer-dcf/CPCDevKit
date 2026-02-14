@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/keyboard.png" alt="Amstrad CPC Keyboard" width="80%"/>
+</p>
+
 # DevCPC CLI - SDK para Amstrad CPC
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
@@ -25,11 +29,13 @@ Esta idea nace de la necesidad de poder compilar la librería [8BP](https://gith
 - ✅ **C** - Código C compilado con SDCC para 8BP
 - ✅ **DSK** - Generación de imagen de disco DSK con todos los archivos del proyecto
 - ✅ **CDT** - Generación de imagen de cinta CDT con todos los archivos del proyecto en el orden establecido
+- ✅ **CPR** - Generación de cartuchos CPR para GX-4000 y CPC Plus
 - ✅ **RETRO VIRTUAL MACHINE** - Pruebas sobre emulador RVM con un solo comando
-- ✅ **M4 BOARD** - Pruebas sobre tarjeta M4 con un solo comando
+- ✅ **M4 BOARD** - Pruebas sobre tarjeta M4 con un solo comando (En desarrollo)
 - ✅ **PANTALLAS DE CARGA** - Creacion de pantallas de cargar desde una imagen png
 - ✅ **SPRITES** - Creacion de sprites desde una imagen png
 - ✅ **CREACION DE PROYECTOS** - Creacion de proyectos con ejemplos Basic, ASM o 8BP
+- ✅ **EXTENSION VSCODE** - Extension para Visual Studio Code, que facilita el trabajo de compilacion.
 
 
 ### Herramientas integradas
@@ -44,7 +50,7 @@ Esta idea nace de la necesidad de poder compilar la librería [8BP](https://gith
 ### Herramientas Opcionales
 
 - [SDCC](http://sdcc.sourceforge.net/) Small Device C Compiler
-- [RetroVirtualMachine](https://www.retrovirtualmachine.org/) Emulaodr Amstrad CPC
+- [RetroVirtualMachine](https://www.retrovirtualmachine.org/) Emulador Amstrad CPC
 
 ### Plataformas soportadas
 - ✅ macOS (ARM64 y x86_64)
@@ -74,6 +80,7 @@ Si decides utilizar la conversion de imagenes a ASM necesitaras instalar la libr
 - ✅ Conversion de imagenes a asm (sprites)
 - ✅ Conversion de imagenes a scn (pantallas de carga)
 - ✅ Creacion de imagenes de cinta CDT
+- ✅ Generación de cartuchos CPR (GX-4000/Plus)
 - ✅ Ejecución flexible DSK/CDT con auto-detección
 - ✅ Soporte para proyectos asm (No 8BP)
 - 🚧 Soporte para pruebas en M4Board (En desarrollo)
@@ -549,6 +556,30 @@ CDT_FILES="loader.bas 8BP0.bin main.bin"
 - Si comentas `CDT` o `CDT_FILES`, no se genera la cinta
 - Tipos soportados: `.bas` (BASIC), `.bin` (binarios), `.scn` (pantallas), `.txt` (raw)
 
+### Cartucho CPR (opcional)
+
+```bash
+# Nombre del cartucho
+CPR="${PROJECT_NAME}.cpr"
+
+# Archivo a ejecutar al arrancar (sin 'run')
+CPR_EXECUTE="loader.bas"
+```
+
+**Nota sobre CPR:**
+- `CPR`: Nombre del archivo de cartucho a generar (para GX-4000 o Plus)
+- `CPR_EXECUTE`: Archivo que se ejecutará al insertar el cartucho
+- **Solo pon el nombre del archivo**, el comando `run"..."` se construye automáticamente
+- Se genera a partir del DSK existente
+- Si comentas `CPR`, no se genera el cartucho
+
+**Ejemplos de CPR_EXECUTE:**
+```bash
+CPR_EXECUTE="disc"           # Ejecuta el programa por defecto del DSK
+CPR_EXECUTE="8BP0.BIN"       # Ejecuta un binario específico
+CPR_EXECUTE="loader.bas"     # Ejecuta un programa BASIC
+```
+
 ### Emulador (opcional)
 
 ```bash
@@ -790,12 +821,16 @@ devcpc run --dsk
 PROJECT_NAME="space_invaders"
 BUILD_LEVEL=0
 
-# Generar DSK y CDT
+# Generar DSK, CDT y CPR
 DSK="${PROJECT_NAME}.dsk"
 CDT="${PROJECT_NAME}.cdt"
+CPR="${PROJECT_NAME}.cpr"
 
 # Orden de carga en cinta
 CDT_FILES="intro.bas title.scn loader.bas 8BP0.bin game.bin"
+
+# Archivo a ejecutar en cartucho
+CPR_EXECUTE="loader.bas"
 
 # Ejecutar en cinta por defecto
 RUN_MODE="cdt"
@@ -809,6 +844,132 @@ devcpc build && devcpc run
 Resultado:
 - `dist/space_invaders.dsk` - Versión disco (todos los archivos)
 - `dist/space_invaders.cdt` - Versión cinta (solo los especificados en CDT_FILES)
+- `dist/space_invaders.cpr` - Versión cartucho (para GX-4000/Plus)
+
+---
+
+## 🎮 Creación de Cartuchos CPR
+
+DevCPC puede generar archivos CPR (cartuchos) para Amstrad GX-4000 y CPC Plus, permitiendo ejecutar tus juegos como si fueran cartuchos originales.
+
+### ¿Qué es un CPR?
+
+CPR (Cartridge ROM) es el formato de cartucho para Amstrad GX-4000 y la serie CPC Plus (464+, 6128+). El cartucho contiene el juego completo y arranca automáticamente al encender la consola/ordenador.
+
+### Configuración Básica
+
+```bash
+# En devcpc.conf
+
+# Activar generación de CPR
+CPR="${PROJECT_NAME}.cpr"
+
+# Archivo a ejecutar al arrancar (sin 'run')
+CPR_EXECUTE="loader.bas"
+```
+
+### 💡 Configuración Simplificada
+
+Solo necesitas especificar el **nombre del archivo**, sin el comando `run`:
+
+```bash
+# ✅ Correcto - Solo el nombre del archivo
+CPR_EXECUTE="loader.bas"
+CPR_EXECUTE="8BP0.BIN"
+CPR_EXECUTE="disc"
+
+# ❌ Incorrecto - No incluyas 'run'
+CPR_EXECUTE='run"loader.bas"'
+```
+
+DevCPC construye automáticamente el comando `run"..."` internamente.
+
+### ¿Cómo Funciona?
+
+Durante `devcpc build`, si CPR está configurado:
+
+1. **Verifica el DSK**: El DSK debe existir primero
+2. **Convierte DSK a CPR**: Usa nocart.py para generar el cartucho
+3. **Configura arranque**: Establece el comando de auto-ejecución
+4. **Parchea ROMs**: Incluye OS, BASIC y AMSDOS en el cartucho
+5. **Genera CPR final**: Crea el archivo listo para usar
+
+### Ejemplo de Salida
+
+```
+═══════════════════════════════════════
+  Crear Cartucho CPR
+═══════════════════════════════════════
+
+ℹ CPR: my_game.cpr
+ℹ Ubicación: dist/my_game.cpr
+
+→ Creando cartucho CPR: my_game.cpr
+ℹ Archivo: loader.bas
+ℹ Comando: run"loader.bas"
+✓ Cartucho CPR creado: dist/my_game.cpr
+ℹ Tamaño: 244K
+
+→ Información del Cartucho CPR:
+
+  Archivo:  my_game.cpr
+  Tamaño:   244K
+  MD5:      d3d371b683bfe1f988626cdafd8bc132
+  Ejecuta:  loader.bas
+  Comando:  run"loader.bas"
+```
+
+### Compatibilidad
+
+| **Hardware** | **Compatible** | **Notas** |
+|--------------|----------------|-----------|
+| GX-4000 | ✅ Sí | Consola dedicada (solo cartuchos) |
+| CPC 464+ | ✅ Sí | Con puerto de cartucho |
+| CPC 6128+ | ✅ Sí | Con puerto de cartucho |
+| CPC 464/664/6128 | ❌ No | Modelos clásicos sin puerto de cartucho |
+
+### Ventajas de CPR
+
+- **Arranque instantáneo**: No necesita cargar desde disco/cinta
+- **Plug & play**: Solo conectar y jugar
+- **Mayor capacidad**: Hasta 512KB (vs 178KB del DSK)
+- **Experiencia consola**: Ideal para demos y presentaciones
+
+### Limitaciones
+
+- Solo funciona en hardware compatible (GX-4000, Plus)
+- No puede modificar el contenido del cartucho
+- Requiere emulador compatible o hardware real
+
+### Ejemplo Completo
+
+```bash
+# devcpc.conf
+PROJECT_NAME="platformer"
+BUILD_LEVEL=2
+
+# Generar los tres formatos
+DSK="${PROJECT_NAME}.dsk"
+CDT="${PROJECT_NAME}.cdt"
+CPR="${PROJECT_NAME}.cpr"
+
+# Configuración específica de cada formato
+CDT_FILES="loader.bas 8BP2.bin"
+CPR_EXECUTE="loader.bas"
+
+RVM_PATH="/Applications/Retro Virtual Machine 2.app/Contents/MacOS/Retro Virtual Machine 2"
+CPC_MODEL=464
+```
+
+```bash
+# Compilar
+devcpc build
+```
+
+Resultado:
+- `dist/platformer.dsk` - Para CPC clásicos (disco)
+- `dist/platformer.cdt` - Para CPC clásicos (cinta)
+- `dist/platformer.cpr` - Para GX-4000/Plus (cartucho)
 
 ---
 
@@ -1512,7 +1673,49 @@ devcpc build
 
 ---
 
-## 📄 Licencia
+## � Extensión para Visual Studio Code
+
+DevCPC cuenta con una extensión oficial para Visual Studio Code que facilita el desarrollo mostrando las tareas disponibles directamente en el explorador.
+
+![Demo](docs/images/extension.gif)
+
+### Instalación
+
+**Opción 1: Desde el Marketplace**
+
+1. Abre Visual Studio Code
+2. Ve a la sección de Extensiones (⇧⌘X)
+3. Busca "DevCPC Tasks"
+4. Haz clic en "Instalar"
+
+**Opción 2: Desde el enlace directo**
+
+[📦 Instalar desde VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=devcpc.devcpc-tasks)
+
+**Opción 3: Desde la terminal**
+
+```bash
+code --install-extension devcpc.devcpc-tasks
+```
+
+### Características
+
+- ✅ Visualiza todas las tareas DevCPC en el explorador
+- ✅ Ejecuta tareas con un solo clic
+- ✅ Refresca automáticamente al detectar cambios
+- ✅ Integración nativa con VS Code
+- ✅ Compatible con proyectos DevCPC
+
+### Uso
+
+1. Abre un proyecto DevCPC en VS Code
+2. En el panel del explorador, verás una nueva sección llamada "DevCPC"
+3. Haz clic en cualquier tarea para ejecutarla
+4. Usa el botón de refrescar para actualizar la lista de tareas
+
+---
+
+## �📄 Licencia
 
 MIT License - Copyright (c) 2026 Destroyer
 
