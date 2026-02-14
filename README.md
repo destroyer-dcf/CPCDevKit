@@ -1516,7 +1516,51 @@ devcpc build
 
 ---
 
-## 📄 Licencia
+## � Extensión para Visual Studio Code
+
+DevCPC cuenta con una extensión oficial para Visual Studio Code que facilita el desarrollo mostrando las tareas disponibles directamente en el explorador.
+
+<p align="center">
+  <img src="docs/images/extension.gif" alt="DevCPC Extension Demo" width="80%"/>
+</p>
+
+### Instalación
+
+**Opción 1: Desde el Marketplace**
+
+1. Abre Visual Studio Code
+2. Ve a la sección de Extensiones (⇧⌘X)
+3. Busca "DevCPC Tasks"
+4. Haz clic en "Instalar"
+
+**Opción 2: Desde el enlace directo**
+
+[📦 Instalar desde VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=devcpc.devcpc-tasks)
+
+**Opción 3: Desde la terminal**
+
+```bash
+code --install-extension devcpc.devcpc-tasks
+```
+
+### Características
+
+- ✅ Visualiza todas las tareas DevCPC en el explorador
+- ✅ Ejecuta tareas con un solo clic
+- ✅ Refresca automáticamente al detectar cambios
+- ✅ Integración nativa con VS Code
+- ✅ Compatible con proyectos DevCPC
+
+### Uso
+
+1. Abre un proyecto DevCPC en VS Code
+2. En el panel del explorador, verás una nueva sección llamada "DevCPC"
+3. Haz clic en cualquier tarea para ejecutarla
+4. Usa el botón de refrescar para actualizar la lista de tareas
+
+---
+
+## �📄 Licencia
 
 MIT License - Copyright (c) 2026 Destroyer
 
